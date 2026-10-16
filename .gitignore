@@ -50,9 +50,14 @@ shirones/config/data/anime-snapshots/*.json
 public/assets/anime/covers/*
 !public/assets/anime/covers/.gitkeep
 
-# generated responsive moment thumbnails
-public/assets/moments/thumbnails/*
-!public/assets/moments/thumbnails/.gitkeep
+# Responsive moment thumbnails.
+# The installed `shirones` package ships no generator for these, while every
+# /images/moments/* image is referenced as <name>-192/-384/-640.webp with no
+# existence check and no fallback (src/utils/content-utils.ts). They are
+# therefore committed on purpose: a fresh clone — including a Cloudflare Pages
+# build — would otherwise render broken moment images. Only the generator's
+# cache file stays out of git.
+public/assets/moments/thumbnails/.cache.json
 
 # local tooling artifacts
 .zcode/

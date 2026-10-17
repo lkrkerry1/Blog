@@ -1,0 +1,16 @@
+{
+  // Cloudflare Workers Builds 用它决定部署什么。
+  // 这是一个纯静态站点（astro build 产出 dist/），所以没有 `main` 字段 ——
+  // 不需要任何 Worker 脚本，只要静态资源。
+  //
+  // - name 必须和 Cloudflare 上创建的项目名一致，否则会部署到另一个 Worker。
+  // - directory 指向 Astro 的构建输出。
+  // - not_found_handling: "404-page" 让不存在的路径返回 Astro 生成的 404.html，
+  //   而不是默认的空 404。
+  "name": "blog",
+  "compatibility_date": "2026-10-17",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

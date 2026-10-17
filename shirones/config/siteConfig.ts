@@ -34,7 +34,10 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 	// IANA time zone for precise post and moment timestamps. It is independent of lang.
 	timeZone: "Asia/Shanghai",
 	themeColor: {
-		hue: 315, // Default hue 0-360. 站点设计默认粉紫（偏二次元）；262 紫 / 345 粉 也可选
+		// 默认色相 0-360。这里是 245（钢蓝），与 shirones/assets/banner/bg.webp 的深蓝夜空同色系。
+		// 参考刻度：0 红 / 120 绿 / 210 青 / 245 蓝 / 270 紫 / 315 粉紫（主题原默认）
+		// 想换回二次元粉紫就改回 315；访客也能在「显示设置」里自己拖滑杆微调。
+		hue: 245,
 		fixed: false, // Hide the theme color picker for visitors
 		// Dynamic Material 3 palette style (TonalSpot/Vibrant/Content/Expressive/Rainbow/FruitSalad/Monochrome/Neutral/Fidelity)
 		style: "tonalSpot",

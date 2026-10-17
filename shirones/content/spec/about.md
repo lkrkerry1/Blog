@@ -4,11 +4,12 @@ Hi, I'm **lkrkerry**. This is my blog for recording my daily progress — especi
 
 I keep it mostly for myself: a trail of what I learn, so that a solution I finally understood is still findable three months later. If a note happens to save someone else an hour, even better.
 
-## What I'm working on
+## Fav
 
-- **Competitive programming (xCPC)** — [what you are training for: contests, rating goal, a team?]
-- **[Topic you are studying]** — [e.g. dynamic programming, graph theory, number theory]
-- **[Something else you care about]** — [one line]
+- **Programming:** Python, C++ 
+- **Mathematics**
+- **Games:** Arknights, Adofai, OSU
+- **Gal/Anime:** White Album 2, No game no life, DATE A LIVE, etc.
 
 ## What you'll find here
 
@@ -18,18 +19,18 @@ I keep it mostly for myself: a trail of what I learn, so that a solution I final
 
 ## About this site
 
-Built with [Astro](https://astro.build/) on the [Shirone](https://github.com/LyraVoid/Shirone) theme — a Material 3 Expressive blog theme. Everything is written in Markdown, generated as static HTML, and deployed on [Cloudflare Pages](https://pages.cloudflare.com/).
+Built with [Astro](https://astro.build/) on the [Shirone](https://github.com/LyraVoid/Shirone) theme — a Material 3 Expressive blog theme. Everything is written in Markdown, generated as static HTML.
 
-:::tip
-This block is here to show the admonition syntax — delete it once you no longer need the reference. The theme also supports `note`, `warning`, `caution` and `details`, written as `:::note` ... `:::`.
-:::
 
 ## Get in touch
 
 | Where | How |
 | --- | --- |
-| GitHub | [github.com/lkrkerry1](https://github.com/lkrkerry1) |
+| GitHub | [lkrkerry1](https://github.com/lkrkerry1) |
 | Email | [lkrkerry@qq.com](mailto:lkrkerry@qq.com) |
-| RSS | [/rss/](/rss/) |
+| Codeforces | [lkrkerry](https://codeforces.com/profile/lkrkerry) |
+| Atcoder | [lkrkerry](https://atcoder.jp/users/lkrkerry) |
+| luogu | [lkrkerry](https://www.luogu.com.cn/user/1129046) |
+| Steam | [lkrkerry](https://steamcommunity.com/profiles/76561199344998311/) |
 
 Thanks for reading.

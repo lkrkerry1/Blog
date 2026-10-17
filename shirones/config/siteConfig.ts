@@ -39,8 +39,11 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 		// 想换回二次元粉紫就改回 315；访客也能在「显示设置」里自己拖滑杆微调。
 		hue: 245,
 		fixed: false, // Hide the theme color picker for visitors
-		// Dynamic Material 3 palette style (TonalSpot/Vibrant/Content/Expressive/Rainbow/FruitSalad/Monochrome/Neutral/Fidelity)
-		style: "tonalSpot",
+		// Dynamic Material 3 palette style —— 必须使用下列精确值，区分大小写。
+		// 类型是 string，写错大小写不会报错，而是静默回退成 tonalSpot：
+		//   "tonalSpot" | "vibrant" | "content" | "expressive" | "rainbow"
+		//   | "fruitSalad" | "monochrome" | "neutral" | "fidelity"
+		style: "vibrant",
 		// Design spec version: "2021" (MD3) or "2025" (M3 Expressive)。角色集一致，
 		// 差异仅在调色板派生（库的 colorSpec 静态为 2025 委托）
 		spec: "2025",

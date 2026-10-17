@@ -128,17 +128,14 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 	},
 	favicon: [
 		// 浏览器标签页 / 书签 / 手机主屏图标，路径相对于 public 目录。
-		// 这套由 public/images/avatar.webp 生成（脚本产物在 public/favicon/avatar-*.png）。
-		// theme 会渲染成 media="(prefers-color-scheme: ...)"，图标跟随系统深浅色自动切换：
-		// light 一套给浅色标签栏（加了深色细描边），dark 一套给深色标签栏（更亮）。
-		{ src: "/favicon/avatar-light-32.png", theme: "light", sizes: "32x32" },
-		{ src: "/favicon/avatar-light-128.png", theme: "light", sizes: "128x128" },
-		{ src: "/favicon/avatar-light-180.png", theme: "light", sizes: "180x180" },
-		{ src: "/favicon/avatar-light-192.png", theme: "light", sizes: "192x192" },
-		{ src: "/favicon/avatar-dark-32.png", theme: "dark", sizes: "32x32" },
-		{ src: "/favicon/avatar-dark-128.png", theme: "dark", sizes: "128x128" },
-		{ src: "/favicon/avatar-dark-180.png", theme: "dark", sizes: "180x180" },
-		{ src: "/favicon/avatar-dark-192.png", theme: "dark", sizes: "192x192" },
+		// 由 public/favicon/avatar.webp（原头像原图）整体等比缩放生成：
+		// 不裁剪、不加圆角、不做明暗调色，图标就是头像本身。
+		// 生成脚本：scripts/make-favicons.py。因为不裁剪也不调色，
+		// 不再需要 light/dark 两套（也就不需要 theme 字段）。
+		{ src: "/favicon/avatar-32.png", sizes: "32x32" },
+		{ src: "/favicon/avatar-128.png", sizes: "128x128" },
+		{ src: "/favicon/avatar-180.png", sizes: "180x180" },
+		{ src: "/favicon/avatar-192.png", sizes: "192x192" },
 	],
 });
 

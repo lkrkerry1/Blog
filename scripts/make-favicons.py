@@ -1,107 +1,47 @@
-"""Regenerate the Shirone favicon set from the author avatar.
+"""Regenerate the favicon set from the original avatar.
 
-The committed files under `public/favicon/avatar-*.png` were produced by this
-script, so re-run it after replacing `public/images/avatar.webp`:
+The shipped icons are plain downscales of `public/favicon/avatar.webp`: the
+whole image is scaled to each icon size with no cropping, no corner masking and
+no colour treatment, so the tab icon shows exactly the avatar and nothing else.
 
     python scripts/make-favicons.py
 
 Requires Python 3 with Pillow (`pip install Pillow`).
 
-The crop is a fixed face framing chosen by visually comparing candidates: the
-closed eyes and blush have to stay readable at 32px. Adjust `CROP_BOX` if you
-swap in a differently framed avatar.
-
-NOTE: the shipped favicons are intentionally pinned to an EARLIER avatar (the
-light-blue character on a starry background), not to the current
-`public/images/avatar.webp`. That earlier image was 400x400, which is what
-`SOURCE_SIZE` and `CROP_BOX` below describe. Running this script against the
-current avatar would be wrong; restore the earlier image first, or re-measure
-`CROP_BOX` and update `SOURCE_SIZE`.
+Downscaling a detailed illustration this far does get soft at 32px - that is
+expected for a whole-image favicon, and the point of this script is to keep the
+icon faithful to the artwork rather than to make a zoomed-in crop of it.
 """
 
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageEnhance
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT / "public" / "images" / "avatar.webp"
+SRC = ROOT / "public" / "favicon" / "avatar.webp"
 OUT = ROOT / "public" / "favicon"
 
-# Face framing in the earlier 400x400 avatar. The guard in main() refuses to
-# run against a different-sized image rather than silently cropping the wrong
-# region.
-SOURCE_SIZE = (400, 400)
-CROP_BOX = (90, 140, 310, 360)
-
+# 32 = browser tab, 128/192 = bookmarks and Android home screen,
+# 180 = iOS "add to home screen".
 SIZES = (32, 128, 180, 192)
-CORNER_RATIO = 0.22
-SS = 4  # supersample factor, gives antialiased squircled corners
-
-# A hairline ring keeps the icon separated from the tab bar it sits on:
-# dark ring for light browser chrome, light ring for dark browser chrome.
-RING = {
-    "light": (12, 26, 64, 100),
-    "dark": (255, 255, 255, 120),
-}
-
-
-def squircle_mask(size: int, ss: int = SS) -> Image.Image:
-    big = size * ss
-    mask = Image.new("L", (big, big), 0)
-    ImageDraw.Draw(mask).rounded_rectangle(
-        (0, 0, big - 1, big - 1), radius=int(big * CORNER_RATIO), fill=255
-    )
-    return mask.resize((size, size), Image.LANCZOS)
-
-
-def ring_overlay(size: int, color: tuple[int, int, int, int], ss: int = SS) -> Image.Image:
-    big = size * ss
-    layer = Image.new("RGBA", (big, big), (0, 0, 0, 0))
-    ImageDraw.Draw(layer).rounded_rectangle(
-        (0, 0, big - 1, big - 1),
-        radius=int(big * CORNER_RATIO),
-        outline=color,
-        width=max(ss, 1),
-    )
-    return layer.resize((size, size), Image.LANCZOS)
-
-
-def build(crop: Image.Image, size: int, variant: str) -> Image.Image:
-    if variant == "light":
-        tint = ImageEnhance.Color(crop).enhance(1.15)
-        tint = ImageEnhance.Contrast(tint).enhance(1.10)
-        tint = ImageEnhance.Brightness(tint).enhance(0.96)
-    else:
-        tint = ImageEnhance.Color(crop).enhance(1.05)
-        tint = ImageEnhance.Brightness(tint).enhance(1.08)
-
-    out = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    out.paste(tint.resize((size, size), Image.LANCZOS), (0, 0), squircle_mask(size))
-    out.alpha_composite(ring_overlay(size, RING[variant]))
-    return out
 
 
 def main() -> None:
     if not SRC.exists():
-        raise SystemExit(f"avatar not found: {SRC}")
+        raise SystemExit(f"favicon source not found: {SRC}")
 
-    OUT.mkdir(parents=True, exist_ok=True)
-    src = Image.open(SRC).convert("RGB")
-    if src.size != SOURCE_SIZE:
+    src = Image.open(SRC)
+    if src.width != src.height:
         raise SystemExit(
-            f"avatar is {src.size[0]}x{src.size[1]} but CROP_BOX was measured "
-            f"for {SOURCE_SIZE[0]}x{SOURCE_SIZE[1]}.\n"
-            "The shipped favicons are pinned to the earlier avatar - restore "
-            "that image, or re-measure CROP_BOX and update SOURCE_SIZE."
+            f"favicon source is {src.width}x{src.height}; a square source is "
+            "required so that scaling to a square icon does not distort it."
         )
-    crop = src.crop(CROP_BOX)
+    src = src.convert("RGB")
 
-    for variant in ("light", "dark"):
-        for size in SIZES:
-            path = OUT / f"avatar-{variant}-{size}.png"
-            img = build(crop, size, variant)
-            img.save(path, "PNG", optimize=True)
-            print(f"wrote {path.relative_to(ROOT)}  {img.size}  {path.stat().st_size} B")
+    for size in SIZES:
+        path = OUT / f"avatar-{size}.png"
+        src.resize((size, size), Image.LANCZOS).save(path, "PNG", optimize=True)
+        print(f"wrote {path.relative_to(ROOT)}  {size}x{size}  {path.stat().st_size} B")
 
 
 if __name__ == "__main__":

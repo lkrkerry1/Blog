@@ -141,6 +141,8 @@ const defaultNavBarConfig: NavBarConfig = {
 	links: [
 		LinkPresets.Home,
 		LinkPresets.Archive,
+		// Series 预设默认没被挂进导航；这里显式加上，否则 /series 只能靠直接输 URL 访问。
+		LinkPresets.Series,
 		LinkPresets.Friends,
 		LinkPresets.Moments,
 		LinkPresets.Anime,

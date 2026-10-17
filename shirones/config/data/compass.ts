@@ -39,14 +39,15 @@ export const compassData: CompassShelf[] = [
 	{
 		key: "judges",
 		name: "Online Judges",
-		icon: "material-symbols:trophy-rounded",
+		icon: "material-symbols:trophy-outline-rounded",
 		blurb: "平时刷题和打比赛的地方。",
+		// 说明：simple-icons 的离线包里只有 21 个开发类图标，没有 codeforces / luogu，
+		// 所以站点瓷砖统一走「首字母色块」兜底，比缺图标留空更整齐。
 		entries: [
 			{
 				label: "Codeforces",
 				href: "https://codeforces.com/",
 				note: "Rating 与题单",
-				icon: "simple-icons:codeforces",
 			},
 			{
 				label: "AtCoder",
@@ -57,7 +58,6 @@ export const compassData: CompassShelf[] = [
 				label: "Luogu",
 				href: "https://www.luogu.com.cn/",
 				note: "中文题面与题解",
-				icon: "simple-icons:luogu",
 			},
 			{
 				label: "Virtual Judge",

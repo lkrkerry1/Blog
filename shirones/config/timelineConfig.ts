@@ -26,7 +26,8 @@ export const timelineConfig: TimelineConfig = withUserConfig("timeline", {
 		{
 			key: "contest",
 			label: "Contests",
-			icon: "material-symbols:trophy-rounded",
+			// 离线图标集里是 trophy-outline-rounded。
+			icon: "material-symbols:trophy-outline-rounded",
 		},
 		{
 			key: "education",

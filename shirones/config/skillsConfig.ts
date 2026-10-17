@@ -21,7 +21,8 @@ export const skillsConfig: SkillsConfig = withUserConfig("skills", {
 		{
 			key: "algorithms",
 			label: "Algorithms",
-			icon: "material-symbols:hub-rounded",
+			// 离线图标集里只有 hub-outline-rounded，没有 hub-rounded。
+			icon: "material-symbols:hub-outline-rounded",
 		},
 		{
 			key: "languages",

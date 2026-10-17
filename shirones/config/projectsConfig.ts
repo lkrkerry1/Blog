@@ -29,7 +29,8 @@ export const projectsConfig: ProjectsConfig = withUserConfig("projects", {
 		{
 			key: "experiment",
 			label: "Experiments",
-			icon: "material-symbols:science-rounded",
+			// 离线图标集里没有 science-rounded，用火箭表示实验性尝试。
+			icon: "material-symbols:rocket-launch-rounded",
 		},
 	],
 	// disabledKeys: [],

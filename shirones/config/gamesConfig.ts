@@ -21,13 +21,15 @@ export const gamesConfig: GamesConfig = withUserConfig("games", {
 		{
 			key: "rhythm",
 			label: "Rhythm",
-			icon: "material-symbols:graphic-eq-rounded",
+			// 离线图标集里没有 graphic-eq-rounded，用音符。
+			icon: "material-symbols:music-note-rounded",
 			description: "Rhythm and music games",
 		},
 		{
 			key: "gacha",
 			label: "Gacha",
-			icon: "material-symbols:casino-rounded",
+			// 离线图标集里没有 casino-rounded，用拼块表示收集养成。
+			icon: "material-symbols:widgets-rounded",
 			description: "Live-service and gacha games",
 		},
 		{

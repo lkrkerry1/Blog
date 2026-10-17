@@ -26,7 +26,8 @@ export const devicesData: DeviceItem[] = [
 			{ key: "os", label: "OS", value: "Windows 11 Pro" },
 		],
 		description: "主力机，日常开发、写题解和本地编译都在它上面。",
-		icon: "material-symbols:laptop-windows-rounded",
+		// 离线图标集里没有 laptop-windows-rounded，用 Windows 桌面图标代替。
+		icon: "material-symbols:desktop-windows-outline-rounded",
 		featured: true,
 	},
 	{

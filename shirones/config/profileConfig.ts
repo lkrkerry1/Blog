@@ -14,6 +14,9 @@ export const profileConfig: ProfileConfig = withUserConfig("profile", {
 	name: "lkrkerry",
 	bio: "青く広がった　あの空のように、曇りなく笑えたら　あなたに会いたい。",
 	// 社交链接：按需增删即可，卡片会按数组顺序渲染图标（图标名可在 https://icones.js.org/ 查）。
+	// 注意 AtCoder 没有单色图标（Iconify 全集里只有 thesvg-color 那枚 29 KB 的精细彩标），
+	// 所以它用本地图标 src/icons/atcoder.svg —— astro-icon 会从该目录按文件名解析，
+	// 图标无 fill 属性，渲染时继承 currentColor，跟随明暗模式。
 	links: [
 		{
 			name: "GitHub",
@@ -21,7 +24,22 @@ export const profileConfig: ProfileConfig = withUserConfig("profile", {
 			url: "https://github.com/lkrkerry1",
 		},
 		{
-			name: "邮箱",
+			name: "Codeforces",
+			icon: "simple-icons:codeforces",
+			url: "https://codeforces.com/profile/lkrkerry",
+		},
+		{
+			name: "AtCoder",
+			icon: "atcoder",
+			url: "https://atcoder.jp/users/lkrkerry",
+		},
+		{
+			name: "Luogu",
+			icon: "simple-icons:luogu",
+			url: "https://www.luogu.com.cn/user/1129046",
+		},
+		{
+			name: "Email",
 			icon: "material-symbols:mail-outline-rounded",
 			url: "mailto:lkrkerry@qq.com",
 		},

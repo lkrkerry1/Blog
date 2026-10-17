@@ -95,3 +95,6 @@ __pycache__/
 
 # lossless audio masters (converted copies live in public/assets/music/)
 .audio-source/
+
+# local usage notes - deliberately kept out of version control
+/USAGE.md

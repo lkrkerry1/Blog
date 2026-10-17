@@ -1,8 +1,12 @@
 # Lets these dependencies run their install scripts.
 # sharp powers Astro's image optimisation and will not work without it.
+# workerd is wrangler's runtime; Cloudflare Pages installs wrangler during its
+# deploy step and pnpm 10+ refuses to run that script unless it is approved here.
 allowBuilds:
   esbuild: true
   sharp: true
+  workerd: true
 onlyBuiltDependencies:
   - esbuild
   - sharp
+  - workerd

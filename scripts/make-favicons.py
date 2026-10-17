@@ -8,8 +8,15 @@ script, so re-run it after replacing `public/images/avatar.webp`:
 Requires Python 3 with Pillow (`pip install Pillow`).
 
 The crop is a fixed face framing chosen by visually comparing candidates: the
-face and the hood silhouette have to stay readable at 32px. Adjust `CROP_BOX`
-if you swap in a differently framed avatar.
+closed eyes and blush have to stay readable at 32px. Adjust `CROP_BOX` if you
+swap in a differently framed avatar.
+
+NOTE: the shipped favicons are intentionally pinned to an EARLIER avatar (the
+light-blue character on a starry background), not to the current
+`public/images/avatar.webp`. That earlier image was 400x400, which is what
+`SOURCE_SIZE` and `CROP_BOX` below describe. Running this script against the
+current avatar would be wrong; restore the earlier image first, or re-measure
+`CROP_BOX` and update `SOURCE_SIZE`.
 """
 
 from pathlib import Path
@@ -20,8 +27,11 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "public" / "images" / "avatar.webp"
 OUT = ROOT / "public" / "favicon"
 
-# Face framing in the 640x640 source image (re-measured after the avatar swap).
-CROP_BOX = (160, 125, 440, 405)
+# Face framing in the earlier 400x400 avatar. The guard in main() refuses to
+# run against a different-sized image rather than silently cropping the wrong
+# region.
+SOURCE_SIZE = (400, 400)
+CROP_BOX = (90, 140, 310, 360)
 
 SIZES = (32, 128, 180, 192)
 CORNER_RATIO = 0.22
@@ -77,6 +87,13 @@ def main() -> None:
 
     OUT.mkdir(parents=True, exist_ok=True)
     src = Image.open(SRC).convert("RGB")
+    if src.size != SOURCE_SIZE:
+        raise SystemExit(
+            f"avatar is {src.size[0]}x{src.size[1]} but CROP_BOX was measured "
+            f"for {SOURCE_SIZE[0]}x{SOURCE_SIZE[1]}.\n"
+            "The shipped favicons are pinned to the earlier avatar - restore "
+            "that image, or re-measure CROP_BOX and update SOURCE_SIZE."
+        )
     crop = src.crop(CROP_BOX)
 
     for variant in ("light", "dark"):

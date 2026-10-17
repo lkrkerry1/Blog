@@ -22,20 +22,21 @@ export const timelineConfig: TimelineConfig = withUserConfig("timeline", {
 			label: "Milestones",
 			icon: "material-symbols:flag-rounded",
 		},
+		// 原来的 career 是给职场经历用的，对竞赛选手不贴合，换成比赛经历。
 		{
-			key: "project",
-			label: "Projects",
-			icon: "material-symbols:code-rounded",
-		},
-		{
-			key: "career",
-			label: "Career",
-			icon: "material-symbols:work-rounded",
+			key: "contest",
+			label: "Contests",
+			icon: "material-symbols:trophy-rounded",
 		},
 		{
 			key: "education",
 			label: "Education",
 			icon: "material-symbols:school-rounded",
+		},
+		{
+			key: "project",
+			label: "Projects",
+			icon: "material-symbols:code-rounded",
 		},
 		{
 			key: "life",

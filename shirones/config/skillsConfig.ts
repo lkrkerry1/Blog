@@ -14,22 +14,24 @@ import { withUserConfig } from "@/utils/config-overlay.ts";
 export const skillsConfig: SkillsConfig = withUserConfig("skills", {
 	enable: true,
 	title: "$t:skills",
-	description: "$t:skillsBanner",
+	// 页面说明：不走 $t: i18n 引用时会被当作字面量，直接用英文文案，
+	// 免得显示主题默认的「turn ideas into maintainable products」那种前端向描述。
+	description: "Algorithms, languages and tools I use in competitive programming.",
 	categories: [
 		{
-			key: "frontend",
-			label: "Frontend",
-			icon: "material-symbols:web-rounded",
+			key: "algorithms",
+			label: "Algorithms",
+			icon: "material-symbols:hub-rounded",
 		},
 		{
-			key: "backend",
-			label: "Backend",
-			icon: "material-symbols:dns-rounded",
+			key: "languages",
+			label: "Languages",
+			icon: "material-symbols:code-rounded",
 		},
 		{
-			key: "tooling",
-			label: "Tooling",
-			icon: "material-symbols:construction-rounded",
+			key: "tools",
+			label: "Tools",
+			icon: "material-symbols:terminal-rounded",
 		},
 	],
 	// disabledNames: [],

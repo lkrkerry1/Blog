@@ -3,7 +3,7 @@ title: Buaa 国庆娱乐赛做题记录
 published: 2026-10-07
 description: 国庆模拟赛十道题的做题记录：LNDS 贪心、格雷码分治、可持久化字典树/线段树、数位 DP、卡快排构造与低内存分块。
 tags: [模拟赛, buaa, 题解]
-category: 笔记/题解
+category: 题解
 lang: zh_CN
 draft: false
 ---

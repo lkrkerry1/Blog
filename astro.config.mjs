@@ -12,4 +12,20 @@ export default defineConfig({
       // components: { "atoms/blog/PostCard": "./src/components/PostCard.astro" },
     }),
   ],
+  vite: {
+    optimizeDeps: {
+      // npm-package mode only.
+      //
+      // The theme's `@/config` alias points inside node_modules, so Vite treats
+      // it as a dependency and pre-bundles it with esbuild. esbuild then
+      // resolves the package-internal `./siteConfig` imports itself, which
+      // bypasses the shirones overlay plugin that redirects them to
+      // `shirones/config/*`. The client silently ends up with the theme's
+      // DEFAULT config (hue 315 / style tonalSpot) while SSR keeps using
+      // shirones/config — so `themeColor` changes look like they do nothing in
+      // `astro dev`. Excluding it keeps the real source (and the overlay) in
+      // play. Production builds are unaffected either way.
+      exclude: ["@/config"],
+    },
+  },
 });

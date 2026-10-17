@@ -10,9 +10,9 @@ import { withUserConfig } from "@/utils/config-overlay.ts";
  * 类型见 src/types/config.ts。
  */
 export const siteConfig: SiteConfig = withUserConfig("site", {
-	// ⚠️ 部署到 Cloudflare Pages 后必须改成你的真实域名，否则 RSS / sitemap / 分享卡片
-	// 里的绝对地址都会指向这个占位符。示例：https://my-blog.pages.dev/ 或你的自定义域名。
-	site: "https://your-blog.pages.dev/",
+	// 本站实际地址。改了这里，RSS / Atom / robots.txt / 分享卡片里的绝对地址都会跟着变。
+	// 以后换自定义域名，只改这一行即可。
+	site: "https://blog.lkrkerry.workers.dev/",
 	base: "/",
 	title: "Blog",
 	// 同时作为浏览器标签页标题后缀（「Blog - xxx」）和站点描述，建议不要太长。

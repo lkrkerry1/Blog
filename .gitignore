@@ -92,3 +92,6 @@ __pycache__/
 
 # ad-hoc build/check logs captured at the repo root
 /*.log
+
+# lossless audio masters (converted copies live in public/assets/music/)
+.audio-source/

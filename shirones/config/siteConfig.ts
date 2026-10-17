@@ -60,8 +60,15 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 		// desktop 用于 >= 1024px；mobile 仅用于 < 1024px 的首页，手机非首页不显示壁纸。
 		// 数组顺序就是轮播顺序；只需要静态 Banner 时，每组保留一张图片即可。
 		src: {
-			desktop: ["assets/images/banner/desktop/1.webp"],
-			mobile: ["assets/images/banner/mobile/1.webp"],
+			// 路径是相对 `src/` 解析的。包模式下主题自己的 src/assets 在 node_modules 里
+			// 够不到用户项目，而用户项目的 src/assets 又不参与主题的图片解析
+			// （实测会退化成断链的相对地址），只有 `shirones/` 下的图片能被解析成
+			// ImageMetadata 并走构建期 AVIF/WebP 响应式优化，所以这里用 `../shirones/…`。
+			desktop: ["../shirones/assets/banner/bg.webp"],
+			// 同一张 1920x1080：手机端由 object-fit: cover 居中裁切，
+			// 优化器会另外生成 640/828/1080 三档，不必单独准备竖图。
+			// 想要竖构图手机壁纸的话，放一张到 shirones/assets/banner/ 再改这里即可。
+			mobile: ["../shirones/assets/banner/bg.webp"],
 		},
 		// 图片裁切焦点："top"、"center" 或 "bottom"。
 		position: "center",

@@ -9,11 +9,11 @@ export const announcementConfig: AnnouncementConfig = withUserConfig(
 	"announcement",
 	{
 		title: "", // 公告标题，填空使用 i18n 字符串 Key.announcement
-		content: "欢迎来到我的个人博客，这里记录技术与生活的碎片。", // 公告内容
+		content: "Welcome to my blog — notes on technology and everyday life.", // 公告内容
 		closable: true, // 允许用户关闭公告
 		link: {
 			enable: true, // 启用链接
-			text: "关于我", // 链接文本
+			text: "About me", // 链接文本
 			url: "/about/", // 链接 URL
 			external: false, // 外部链接
 		},

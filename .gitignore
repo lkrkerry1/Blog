@@ -89,3 +89,6 @@ artifacts/shirone-ai-*
 # Python bytecode from scripts/make-favicons.py
 __pycache__/
 *.py[cod]
+
+# ad-hoc build/check logs captured at the repo root
+/*.log

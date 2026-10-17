@@ -45,4 +45,28 @@ export interface AnimeItem {
 }
 
 export const animeData: AnimeItem[] = [
+	{
+		title: "White Album 2",
+		status: "completed",
+		rating: 9,
+		year: "2013",
+		studio: "Satelight",
+		genres: ["Drama", "Romance", "Music"],
+	},
+	{
+		title: "No Game No Life",
+		status: "completed",
+		rating: 8,
+		year: "2014",
+		studio: "Madhouse",
+		genres: ["Adventure", "Fantasy", "Comedy"],
+	},
+	{
+		title: "Date A Live",
+		status: "completed",
+		rating: 7,
+		year: "2013",
+		studio: "AIC PLUS+",
+		genres: ["Action", "Romance", "Sci-Fi"],
+	},
 ];

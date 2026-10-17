@@ -16,24 +16,19 @@ export const gamesConfig: GamesConfig = withUserConfig("games", {
 	enable: true,
 	title: "$t:games",
 	description: "$t:gamesBanner",
+	// 注意：没有任何条目的分类会自动隐藏，所以可以放心保留暂时用不到的分类。
 	categories: [
 		{
-			key: "open-world",
-			label: "Open World",
-			icon: "material-symbols:explore-outline-rounded",
-			description: "Open-world adventures",
+			key: "rhythm",
+			label: "Rhythm",
+			icon: "material-symbols:graphic-eq-rounded",
+			description: "Rhythm and music games",
 		},
 		{
-			key: "sandbox",
-			label: "Sandbox",
-			icon: "material-symbols:widgets-rounded",
-			description: "Building, crafting & creative worlds",
-		},
-		{
-			key: "rpg",
-			label: "RPG",
-			icon: "material-symbols:shield-outline-rounded",
-			description: "Role-playing stories & builds",
+			key: "gacha",
+			label: "Gacha",
+			icon: "material-symbols:casino-rounded",
+			description: "Live-service and gacha games",
 		},
 		{
 			key: "action",

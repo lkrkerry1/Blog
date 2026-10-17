@@ -36,4 +36,65 @@ export interface CompassShelf {
 }
 
 export const compassData: CompassShelf[] = [
+	{
+		key: "judges",
+		name: "Online Judges",
+		icon: "material-symbols:trophy-rounded",
+		blurb: "平时刷题和打比赛的地方。",
+		entries: [
+			{
+				label: "Codeforces",
+				href: "https://codeforces.com/",
+				note: "Rating 与题单",
+				icon: "simple-icons:codeforces",
+			},
+			{
+				label: "AtCoder",
+				href: "https://atcoder.jp/",
+				note: "日系比赛",
+			},
+			{
+				label: "Luogu",
+				href: "https://www.luogu.com.cn/",
+				note: "中文题面与题解",
+				icon: "simple-icons:luogu",
+			},
+			{
+				label: "Virtual Judge",
+				href: "https://vjudge.net/",
+				note: "多平台题目聚合",
+			},
+		],
+	},
+	{
+		key: "learn",
+		name: "Learning",
+		icon: "material-symbols:school-rounded",
+		blurb: "查算法、补知识点。",
+		entries: [
+			{
+				label: "OI Wiki",
+				href: "https://oi-wiki.org/",
+				note: "中文算法百科",
+			},
+			{
+				label: "CP-Algorithms",
+				href: "https://cp-algorithms.com/",
+				note: "英文算法教程",
+			},
+		],
+	},
+	{
+		key: "tools",
+		name: "Tools",
+		icon: "material-symbols:construction-rounded",
+		blurb: "常用的开发与工具站。",
+		entries: [
+			{
+				label: "GitHub",
+				href: "https://github.com/lkrkerry1",
+				note: "代码托管",
+			},
+		],
+	},
 ];

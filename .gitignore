@@ -85,3 +85,7 @@ artifacts/shirone-ai-*
 # local build scratch (esbuild needs a writable temp dir inside the project
 # when the sandbox denies it the system temp directory)
 .tmp/
+
+# Python bytecode from scripts/make-favicons.py
+__pycache__/
+*.py[cod]

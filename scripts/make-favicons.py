@@ -8,8 +8,8 @@ script, so re-run it after replacing `public/images/avatar.webp`:
 Requires Python 3 with Pillow (`pip install Pillow`).
 
 The crop is a fixed face framing chosen by visually comparing candidates: the
-closed eyes and blush have to stay readable at 32px. Adjust `CROP_BOX` if you
-swap in a differently framed avatar.
+face and the hood silhouette have to stay readable at 32px. Adjust `CROP_BOX`
+if you swap in a differently framed avatar.
 """
 
 from pathlib import Path
@@ -20,8 +20,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "public" / "images" / "avatar.webp"
 OUT = ROOT / "public" / "favicon"
 
-# Face framing in the 400x400 source image.
-CROP_BOX = (90, 140, 310, 360)
+# Face framing in the 640x640 source image (re-measured after the avatar swap).
+CROP_BOX = (160, 125, 440, 405)
 
 SIZES = (32, 128, 180, 192)
 CORNER_RATIO = 0.22

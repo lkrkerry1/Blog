@@ -1,6 +1,6 @@
 ---
 title: LGR-309(Div. 2) 做题记录
-published: 2026-10-08
+published: 2026-10-11
 description: 前两题还行，后两题不会
 tags: [模拟赛, 洛谷, Div. 2,题解]
 category: 题解

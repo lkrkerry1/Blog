@@ -98,3 +98,5 @@ __pycache__/
 
 # local usage notes - deliberately kept out of version control
 /USAGE.md
+
+.vscode/**

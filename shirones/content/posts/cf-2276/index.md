@@ -2,7 +2,7 @@
 title: CF2276(Div. 2) 做题记录
 published: 2026-10-15
 description: 发挥很奇怪的一场，前期跳了B但最后因为D简单节约了时间所以反而把E做了
-tags: [模拟赛, Codeforces, Div. 2,题解]
+tags: [模拟赛, Codeforces, Div. 2]
 category: 题解
 lang: zh_CN
 draft: false

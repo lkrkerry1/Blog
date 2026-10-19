@@ -2,7 +2,7 @@
 title: LGR-307 SCP2026 第二轮模拟
 published: 2026-10-17
 description: 洛谷的csp-s模拟赛的做题记录
-tags: [模拟赛, 洛谷, 题解]
+tags: [模拟赛, 洛谷]
 category: 题解
 lang: zh_CN
 draft: false

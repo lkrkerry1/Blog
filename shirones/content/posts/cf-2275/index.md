@@ -2,7 +2,7 @@
 title: CF2275(Div.3) 做题记录
 published: 2026-10-08
 description: 前后发挥还行，但中间CD卡了一会
-tags: [模拟赛, Codeforces, Div. 3,题解]
+tags: [模拟赛, Codeforces, Div. 3]
 category: 题解
 lang: zh_CN
 draft: false

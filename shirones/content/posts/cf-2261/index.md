@@ -2,7 +2,7 @@
 title: CF2261(Div. 1+2) 做题记录
 published: 2026-10-18
 description: 三个小时考试时间救了我属于是，两个钟硬啃E啃出来了之间飞到900名。喜提蓝名！
-tags: [模拟赛, Codeforces, Div. 2,题解]
+tags: [模拟赛, Codeforces, Div. 2]
 category: 题解
 lang: zh_CN
 draft: false

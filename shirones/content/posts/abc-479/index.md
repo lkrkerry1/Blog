@@ -2,7 +2,7 @@
 title: ABC479 做题记录
 published: 2026-10-11
 description: Atcoder Beginners Contest 479，超常发挥的一场 ABC，差点AK了
-tags: [模拟赛, Atcoder, ABC,题解]
+tags: [模拟赛, Atcoder, ABC]
 category: 题解
 lang: zh_CN
 draft: false

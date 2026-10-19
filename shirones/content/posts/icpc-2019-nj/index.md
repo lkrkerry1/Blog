@@ -2,7 +2,7 @@
 title: ICPC 2019 区域赛南京站重现赛 做题记录
 published: 2026-10-15
 description: 第一次在洛谷上vp icpc的题，基本上会写的都写了还行。
-tags: [模拟赛, 洛谷, 题解,xCPC]
+tags: [模拟赛, 洛谷,xCPC]
 category: 题解
 lang: zh_CN
 draft: false

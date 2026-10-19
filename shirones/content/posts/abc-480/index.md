@@ -2,7 +2,7 @@
 title: ABC480 做题记录
 published: 2026-10-17
 description: Atcoder Beginners Contest 480，打得一般
-tags: [模拟赛, Atcoder, ABC,题解]
+tags: [模拟赛, Atcoder, ABC]
 category: 题解
 lang: zh_CN
 draft: false

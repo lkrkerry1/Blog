@@ -2,7 +2,7 @@
 title: CF2271(Div. 1+2) 做题记录
 published: 2026-10-11
 description: 依旧一个钟ABC，两个钟D
-tags: [模拟赛, Codeforces, Div. 2,题解]
+tags: [模拟赛, Codeforces, Div. 2]
 category: 题解
 lang: zh_CN
 draft: false

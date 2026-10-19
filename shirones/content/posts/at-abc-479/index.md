@@ -1,7 +1,7 @@
 ---
 title: ABC479 做题记录
 published: 2026-10-11
-description: 五题题解：子集枚举、分段最短路、树上的边操作、走廊移动与分数最优化。
+description: 子集枚举、分段最短路、树上的边操作、走廊移动与分数最优化。
 tags: [模拟赛, AtCoder, ABC]
 category: 题解
 lang: zh_CN

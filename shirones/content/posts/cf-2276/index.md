@@ -1,7 +1,7 @@
 ---
 title: CF2276(Div. 2) 做题记录
 published: 2026-10-15
-description: 五题题解：贪心签到、01 串压缩、子段整除计数、二分图染色、模式串子串计数。
+description: 贪心签到、01 串压缩、子段整除计数、二分图染色、模式串子串计数。
 tags: [模拟赛, Codeforces, Div. 2]
 category: 题解
 lang: zh_CN

@@ -1,7 +1,7 @@
 ---
 title: Buaa 国庆娱乐赛做题记录
 published: 2026-10-07
-description: 十题题解：LNDS 贪心、格雷码分治、可持久化数据结构、数位 DP，含卡快排与 4MB 内存分块。
+description: LNDS 贪心、格雷码分治、可持久化数据结构、数位 DP，含卡快排与 4MB 内存分块。
 tags: [模拟赛, buaa]
 category: 题解
 lang: zh_CN

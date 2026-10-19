@@ -1,7 +1,7 @@
 ---
 title: CF2275(Div.3) 做题记录
 published: 2026-10-08
-description: 四题题解：模拟、三元组构造、三序列操作的最值、图上游走的最长路径。
+description: 模拟、三元组构造、三序列操作的最值、图上游走的最长路径。
 tags: [模拟赛, Codeforces, Div. 3]
 category: 题解
 lang: zh_CN

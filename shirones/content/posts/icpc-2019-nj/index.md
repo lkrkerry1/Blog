@@ -1,7 +1,7 @@
 ---
 title: ICPC 2019 区域赛南京站重现赛 做题记录
 published: 2026-10-15
-description: 五题题解：因数倍数构造、棋盘路径染色计数、数字矩阵最长路径、真假话询问、三角形面积平分。
+description: 因数倍数构造、棋盘路径染色计数、数字矩阵最长路径、真假话询问、三角形面积平分。
 tags: [模拟赛, 洛谷, xCPC]
 category: 题解
 lang: zh_CN

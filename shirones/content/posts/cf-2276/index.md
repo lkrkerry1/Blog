@@ -1,13 +1,15 @@
 ---
 title: CF2276(Div. 2) 做题记录
 published: 2026-10-15
-description: 发挥很奇怪的一场，前期跳了B但最后因为D简单节约了时间所以反而把E做了
+description: 五题题解：贪心签到、01 串压缩、子段整除计数、二分图染色、模式串子串计数。
 tags: [模拟赛, Codeforces, Div. 2]
 category: 题解
 lang: zh_CN
 draft: false
 ---
 
+
+发挥很奇怪的一场：前期跳了 B，但 D 比想象中简单，省下的时间反而让我把 E 也做出来了。
 
 ## [A. Perfect Sandwiches](https://codeforces.com/contest/2276/problem/A)
 

@@ -1,26 +1,15 @@
 ---
 title: ABC479 做题记录
 published: 2026-10-11
-description: Atcoder Beginners Contest 479，超常发挥的一场 ABC，差点AK了
-tags: [模拟赛, Atcoder, ABC]
+description: 五题题解：子集枚举、分段最短路、树上的边操作、走廊移动与分数最优化。
+tags: [模拟赛, AtCoder, ABC]
 category: 题解
 lang: zh_CN
 draft: false
 ---
 
 
-## [A - Odd Index Sum](https://atcoder.jp/contests/abc479/tasks/abc479_a)
-
-**题意：** 求给定数列的奇数项的和。
-
-签到题，如题。
-
-
-## [B - Longest Rainy Streak](https://atcoder.jp/contests/abc479/tasks/abc479_b)
-
-**题意：** 给定 `RS` 字符串，求连续 `R` 最大长度。
-
-签到题，如题。
+这场是超常发挥的一场 ABC，差点就 AK 了。
 
 ## [C - Bento Packing](https://atcoder.jp/contests/abc479/tasks/abc479_c)
 
@@ -43,7 +32,7 @@ draft: false
 
 **题意：** 给一棵节点数为 $n$ 的树，每次切除某一条边并给两个连通块中较大的一块中的每一个节点加一再将边连回。求最后每个节点的值。
 
-本质签到题，考虑先做一个dfs，然后由于每一个子树内的dfn连续，该问题等效于在dfn数组上做区间修改单点查询。最终复杂度 $O(n)$。
+本质签到题，考虑先做一个 dfs，然后由于每一个子树内的 dfn 连续，该问题等效于在 dfn 数组上做区间修改单点查询。最终复杂度 $O(n)$。
 
 ```cpp
 void solve() {
@@ -86,7 +75,7 @@ void solve() {
 
 **题意：** 有一个走廊上站着 $n$ 个人，每个人一次可以移动一步或是与相邻的人交换位置。求所有人到达他们的目标的最少移动次数。
 
-好玩的贪心+构造。~~BA走格子~~
+好玩的贪心+构造。~~BA 走格子~~
 
 注意到移动次数就是每个人到目标位置的空格数（也就是必须老老实实一步一步走的）+交换的次数（每次交换可以让两个人都走一步），而交换的次数就是两个人的逆序对数。直接离散化然后丢进树状数组统计就行。
 
@@ -123,7 +112,7 @@ void solve() {
 
 **题意：** 给定两个整数数列 $a_i,b_i$，求满足对任意 $i,j$：$(a_i+c_i)(b_j+d_j)=(a_j+c_j)(b_i+d_i)$ 时的实数数列 $\displaystyle \sum_{i=1}^{N} \left ( |c_i|+|d_i| \right )$ 的最小值。
 
-大数学题！第一次几乎场切的ABC G题。
+大数学题！第一次几乎场切的 ABC G 题。
 
 化简该式，先将等式变量分离，
 

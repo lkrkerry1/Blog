@@ -1,13 +1,15 @@
 ---
 title: ICPC 2019 区域赛南京站重现赛 做题记录
 published: 2026-10-15
-description: 第一次在洛谷上vp icpc的题，基本上会写的都写了还行。
-tags: [模拟赛, 洛谷,xCPC]
+description: 五题题解：因数倍数构造、棋盘路径染色计数、数字矩阵最长路径、真假话询问、三角形面积平分。
+tags: [模拟赛, 洛谷, xCPC]
 category: 题解
 lang: zh_CN
 draft: false
 ---
 
+
+第一次在洛谷上 vp ICPC 的题，基本上会写的都写了，感觉还行。
 
 ## [A A Hard Problem](https://www.luogu.com.cn/problem/P17699)
 
@@ -39,9 +41,9 @@ draft: false
 **题意：** 给一个数字矩阵，求其长度超过 $4$ 且最长的数值连续路径条数。
 
 
-拓扑dp。
+拓扑 dp。
 
-考虑将数值和位置都相邻的格子连边，然后跑拓扑排序顺便dp即可。
+考虑将数值和位置都相邻的格子连边，然后跑拓扑排序顺便 dp 即可。
 
 ```cpp
 void solve() {

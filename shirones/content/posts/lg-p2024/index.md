@@ -2,7 +2,7 @@
 title: P2024 食物链（带权并查集/扩展域并查集）
 published: 2026-10-19
 description: 带权并查集/扩展域并查集模板题
-tags: [并查集, 洛谷]
+tags: [模板, 并查集, 洛谷]
 category: 题解
 lang: zh_CN
 draft: false

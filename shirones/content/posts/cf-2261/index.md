@@ -1,7 +1,7 @@
 ---
 title: CF2261(Div. 1+2) 做题记录
 published: 2026-10-18
-description: 简单博弈、按位或贪心、取数游戏、区间询问与括号串操作。
+description: 简单博弈、按位或贪心、取数游戏、区间询问与括号串操作
 tags: [模拟赛, Codeforces, Div. 2]
 category: 题解
 lang: zh_CN

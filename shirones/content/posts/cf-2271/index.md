@@ -1,7 +1,7 @@
 ---
 title: CF2271(Div. 1+2) 做题记录
 published: 2026-10-11
-description: 打表找规律、MEX 博弈、异或子区间性质、区间重叠判定。
+description: 打表找规律、MEX 博弈、异或子区间性质、区间重叠判定
 tags: [模拟赛, Codeforces, Div. 2]
 category: 题解
 lang: zh_CN

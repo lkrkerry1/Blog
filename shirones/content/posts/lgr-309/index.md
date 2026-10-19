@@ -1,7 +1,7 @@
 ---
 title: LGR-309(Div. 2) 做题记录
 published: 2026-10-11
-description: 模条件构造、数列拆分合并的最少操作次数。
+description: 模条件构造、数列拆分合并的最少操作次数
 tags: [模拟赛, 洛谷, Div. 2]
 category: 题解
 lang: zh_CN

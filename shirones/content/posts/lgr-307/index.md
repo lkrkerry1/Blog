@@ -1,7 +1,7 @@
 ---
 title: LGR-307 SCP2026 第二轮模拟
 published: 2026-10-17
-description: 二分求插入代价、OR 与 MEX 的贡献计算。
+description: 二分求插入代价、OR 与 MEX 的贡献计算
 tags: [模拟赛, 洛谷]
 category: 题解
 lang: zh_CN

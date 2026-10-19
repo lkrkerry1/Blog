@@ -1,7 +1,7 @@
 ---
 title: ABC480 做题记录
 published: 2026-10-17
-description: 字符串近似匹配、区间覆盖、前缀拼接后的区间和、等差数列计数。
+description: 字符串近似匹配、区间覆盖、前缀拼接后的区间和、等差数列计数
 tags: [模拟赛, AtCoder, ABC]
 category: 题解
 lang: zh_CN

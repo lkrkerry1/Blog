@@ -1,6 +1,6 @@
 ---
 title: P6567 买表
-published: 2026-10-08
+published: 2026-10-20
 description: 卡常，多重背包优化
 tags: [洛谷, DP, 二进制技巧, 卡常]
 category: 题解

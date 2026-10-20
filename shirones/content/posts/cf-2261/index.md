@@ -8,13 +8,11 @@ lang: zh_CN
 draft: false
 ---
 
-
 三个小时的考试时间救了我 —— 两个钟硬啃 E 啃出来了，名次直接飞到 900。喜提蓝名！
 
 ## [A. Hey, It's Me, Souvlakity](https://codeforces.com/contest/2261/problem/A)
 
 **题意：** 初始将 $1$ 到 $n$ 的整数分给两个人，每轮 A 给 B 一个数，B 再选一个给回来（可以选同一个数），A 希望最终手上的元素中最大值-最小值最大，而 B 希望最小，问最终的结果是多少。
-
 
 简单博弈论。
 
@@ -32,7 +30,6 @@ void solve() {
     fwn(cnt != 2 ? mx - mn : 1);
 }
 ```
-
 
 ## [B. What's the Capital of France?](https://codeforces.com/contest/2261/problem/B)
 
@@ -83,8 +80,6 @@ void solve() {
 }
 ```
 
-
-
 ## [D1. Come Be My Friend, Don't Be So Scared (Easy Version)](https://codeforces.com/contest/2261/problem/D1)
 
 **题意：** 有一个位于 $[1,n]$ 的整数，你可以设置若干区间来试图找到他（每个区间如果覆盖他输出 $1$ 否则 $0$），求最少区间数。
@@ -103,7 +98,48 @@ void solve() {
 }
 ```
 
+## [D2. Come Be My Friend, Don't Be So Scared (Hard Version)](https://codeforces.com/contest/2261/problem/D2)
 
+**题意：** 在上一题基础上，增加 $m$ 个初始区间，求需要额外增加的最少区间数。
+
+神题！非常优秀的转化和构造。
+
+先尝试把削弱版放到环上理解：
+
+![把削弱版放到环上理解：用若干弦把圆弧分开](img/Pasted_image_20261020225138.svg)
+
+相当于要用若干弦将圆弧分开。为了保证不出现重复，每次分割应该尽量平均以实现最优。此时得到的就是上题的结论：最少区间数是 $\lceil\frac{n+1}{2}\rceil$。
+
+再考虑该题，先用哈希将每个点被哪些区间覆盖算出来，相同的区间覆盖的点需要被区分。按照顺序放到环上后，我们发现只需考虑连续的相同区间即可（因为比如 2 和 5 都被相同区间覆盖，那么 1 和 6 或 3 和 4 必然也被相同区间覆盖，从 3 和 4 中间切开可以同时把 2 和 5 区分开）。
+
+数出连续的相同个数 $s$，答案为 $\lceil\frac s2\rceil$。构造也是容易的，类似上题，每次选一个切割点（输出闭区间所以要加一）和一半后的对应点，每次都尽可能将圆弧分成两半即可。
+
+```cpp
+void solve() {
+    int n, m, pre = 0, c;
+    fr(n, m);
+    vector<ull> hs(n + 2);
+    mt19937_64 rd(time(0));
+    for (int l, r; m--;) {
+        fr(l, r);
+        ull tmp = rd();
+        hs[l] ^= tmp, hs[r + 1] ^= tmp;
+    }
+    for (int i = 2; i <= n; ++i) hs[i] ^= hs[i - 1];
+    unordered_map<ull, int> cnt;
+    for (int i = 1; i <= n; ++i)
+        if (++cnt[hs[i]] > 1) pre = i;
+    if (!pre) return fwn(0);
+    vector<int> ans;
+    for (int i = 1; i <= n; ++i) {
+        if (cnt[hs[i]] == 1) continue;
+        if (hs[i] == hs[pre]) ans.emplace_back(i - 1);
+        pre = i;
+    }
+    fwn(c = (ans.size() + 1) >> 1);
+    for (int i = 0; i < c; ++i) fwn(ans[i] + 1, ans[i + (ans.size() >> 1)]);
+}
+```
 
 ## [E. What Does the Cow Say?](https://codeforces.com/contest/2261/problem/E)
 
@@ -113,8 +149,7 @@ void solve() {
 
 首先我们发现这个问题可以进行等效成树上问题：将连续的 `()` 当成叶子节点，每个节点的子节点就是该对括号所包含的内容对应的节点。不难发现题目中的操作相当于将叶子节点删去，随后增加一个节点成为整个森林的根。
 
-
-接下来再思考答案来源：最终的答案是从任意位置开始每次只向最早的子节点走的最长路径，答案只可能来源于原有的路径的并或是根上与增加的几个根节点的并。分开考虑，如果是内部链，如果长度为 $L$ 存在， $L-1$ 必然存在，即有单调性，可以二分答案查找是否存在长度为 $L$，代价不超过 $k$ 的内部链。若链为 $u\rightarrow v$，代价为 $dfn_v-dfn_u-L+1$。如果是到 $u$ 的长为 $L$ 的根部链（未计算增加的 $k$）则代价为 $u$ 之前点个数除去这条保留的链条， 即 $dfn_u-L$。即我们只需要关注某一个深度的点 `dfn` 最小是多少，记作 $mp_d$，显然有 $mp_{d+1}\ge mp_d+1$，所以 $mp_L-L$ 单调不降，可以二分得到符合条件的最大 $L$。
+接下来再思考答案来源：最终的答案是从任意位置开始每次只向最早的子节点走的最长路径，答案只可能来源于原有的路径的并或是根上与增加的几个根节点的并。分开考虑，如果是内部链，如果长度为 $L$ 存在，$L-1$ 必然存在，即有单调性，可以二分答案查找是否存在长度为 $L$，代价不超过 $k$ 的内部链。若链为 $u\rightarrow v$，代价为 $dfn_v-dfn_u-L+1$。如果是到 $u$ 的长为 $L$ 的根部链（未计算增加的 $k$）则代价为 $u$ 之前点个数除去这条保留的链条， 即 $dfn_u-L$。即我们只需要关注某一个深度的点 `dfn` 最小是多少，记作 $mp_d$，显然有 $mp_{d+1}\ge mp_d+1$，所以 $mp_L-L$ 单调不降，可以二分得到符合条件的最大 $L$。
 
 最终答案就是两种情况的较大值（根部链要加 $k$ 而且不能超过总的左括号个数），复杂度 $O(n\log n)$。
 
@@ -169,3 +204,4 @@ void solve() {
     fwn(max(ans, min(n >> 1, l + k)));
 }
 ```
+

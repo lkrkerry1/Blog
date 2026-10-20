@@ -2,7 +2,7 @@
 title: BUAA E4 J Lavender Edge
 published: 2026-10-19
 description: 按位与或的单调性 trick
-tags: [buaa, 位运算, Ad-hoc]
+tags: [buaa, 二进制技巧, Ad-hoc]
 category: 题解
 lang: zh_CN
 draft: false
@@ -45,4 +45,5 @@ int main() {
     cout << ans;
     return 0;
 }
+
 ```

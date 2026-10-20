@@ -1,18 +1,16 @@
 ---
 title: CF2271(Div. 1+2) 做题记录
 published: 2026-10-11
-description: 打表找规律、MEX 博弈、异或子区间性质、区间重叠判定
+description: 打表找规律、MEX 博弈、异或子区间性质、区间重叠判定、贪心+二分
 tags: [模拟赛, Codeforces, Div. 2]
 category: 题解
 lang: zh_CN
 draft: false
 ---
 
-
 依旧是一个钟写完 ABC，剩下两个钟全砸在 D 上。
 
 ## [A. Robot Odd Moves](https://codeforces.com/contest/2271/problem/A)
-
 
 **题意：** 有一个机器人从 $(0,0)$ 开始移动，每次可以向右上或右下移动一个对角线格，问移到 $(x,y)$ 需要几次。
 
@@ -44,7 +42,6 @@ void solve() {
 }
 ``` 
 
-
 ## [B. MEX Game](https://codeforces.com/contest/2271/problem/B)
 
 **题意：** 给定 $n$ 个正整数 $a_i$，两个人轮流从里面拿数，先手目标使自己最小的出现不超过给定正整数 $k$ 次的数与后手不相等，而后手目标相等。求拿完后的获胜方。
@@ -66,11 +63,7 @@ void solve() {
 }
 ```
 
-
-
 ## [C. XOR Problem](https://codeforces.com/contest/2271/problem/C)
-
-
 
 **题意：** 给定正整数 $n$，求 $\max(|A|-f(A))$ 以及当取到最大值时的最长的 $A$，其中 $A$ 为一个整数数列，每个数在 $[0,n]$ 范围，$|A|$ 为 $A$ 的长度，$f(A)$ 为 $A$ 中按位异或和为 $0$ 的子区间个数。
 
@@ -88,7 +81,6 @@ void solve() {
 }
 
 ```
-
 
 ## [D. Target Infection](https://codeforces.com/contest/2271/problem/D)
 
@@ -126,3 +118,40 @@ void solve() {
     fwn(-1);
 }
 ```
+
+## [E. Array Emptying](https://codeforces.com/contest/2271/problem/E)
+
+**题意：** 给一个长度为 $n$ 的正整数组和一个正整数 $k$，每次操作可以删去一个小于等于 $k$ 的元素或是将某个元素替换为 $2$ 个 $\lceil\frac x2\rceil$ 再将 $k$ 增加 $1$。求清空原数组的最少操作次数。
+
+优秀的贪心+二分题，有一定思维难度。
+
+注意到先进行所有的分裂操作，再全部清楚必然最优，因为如果可以在之后的某一步分裂，将其移到前面一定可行而且使 $k$ 更大，情况不会更劣。因此我们可以二分分裂的步数，使用一个大根堆倒序进行操作。当分裂次数为 $x$ 时，最终能删去的最大元素为 $k+n+2x-1$，大于该元素的必须分裂，符合要求的就删去并降低上界即可判断是否可行。最终复杂度 $O(n\log n)$。
+
+```cpp
+void solve() {
+    int n, k;
+    fr(n, k);
+    vector<int> a(n);
+    fr(a);
+    auto check = [&](int mid) {
+        priority_queue<int> pq(a.begin(), a.end());
+        for (int r = k + n - 1 + (mid << 1), v; pq.size();) {
+            if (pq.top() <= r) pq.pop(), --r;
+            else {
+                v = pq.top(), pq.emplace((v + 1) >> 1);
+                pq.emplace((v + 1) >> 1), pq.pop();
+                if (!(mid--)) return false;
+            }
+        }
+        return true;
+    };
+    int l = 0, r = *ranges::max_element(a);
+    while (l < r) {
+        int mid = (l + r) >> 1;
+        if (check(mid)) r = mid;
+        else l = mid + 1;
+    }
+    fwn(n + (l << 1));
+}
+```
+

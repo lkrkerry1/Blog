@@ -113,7 +113,7 @@ void solve() {
         fr(a), fr(b);
         for (ull i = 0, c; i < n; ++i)
             fr(c), key[i] = a[i] << 40 | b[i] << 20 | c;
-        ranges::sort(a);
+        ranges::sort(key);
     }
     ll sa = 0, sb = 0, sc = 0;
     for (int i = 0, cnt = 1; i < n; i += cnt) {

@@ -19,15 +19,12 @@ draft: false
 $$
 \mathrm{ADD}_b \circ \mathrm{ADD}_a = \mathrm{ADD}_{a+b}
 $$
-
 $$
 \mathrm{ADD}_c \circ G_{a,b} = G_{a,b+c}
 $$
-
 $$
 G_{b,c} \circ \mathrm{ADD}_a = G_{a+b,c}
 $$
-
 $$
 G_{c,d} \circ G_{a,b} = G_{a+b+c,d}
 $$

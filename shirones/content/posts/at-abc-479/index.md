@@ -140,7 +140,7 @@ $$
 
 
 
-令 $x=1/k$ 换元即求 $\sum|a_i||x-\frac{b_i}{a_i}|$。这是一个经典问题（真吗）$x$ 取最小的满足 $\sum_{i=1}^j a_i\ge\frac {\sum_i^n a_i}2$ 的 $\sum_{i=1}^{j}\frac{b_i}{a_i}$ 时取到最小，模拟计算即可。 注意该题要保留分数。复杂度 $O(n\log n)$
+令 $x=1/k$ 换元即求 $\sum|a_i||x-\frac{b_i}{a_i}|$。这是一个经典问题（真吗）$x$ 取最小的满足 $\sum_{i=1}^j a_i\ge\frac {\sum_i^n a_i}2$ 的 $\frac{b_j}{a_j}$ 时取到最小，模拟计算即可。注意该题要保留分数。复杂度 $O(n\log n)$。
 
 ```cpp
 void solve() {

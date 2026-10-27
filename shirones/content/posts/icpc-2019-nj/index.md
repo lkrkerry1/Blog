@@ -1,7 +1,7 @@
 ---
 title: ICPC 2019 区域赛南京站重现赛 做题记录
 published: 2026-10-15
-description: 因数倍数构造、棋盘路径染色计数、数字矩阵最长路径、真假话询问、三角形面积平分
+description: 因数倍数构造、棋盘路径染色计数、数字矩阵最长路径、真假话询问、记忆化搜索、三角形面积平分
 tags: [模拟赛, 洛谷, xCPC]
 category: 题解
 lang: zh_CN
@@ -92,6 +92,54 @@ void solve() {
 
 签到题。考虑直接把 $c$ 当作 $b$ 处理，随后问两倍的问题直接选择人数较多的答案，显然符合题意。即答案为 $2(b+c)+1$。记得特判仅有 $a=1$ 时不需询问任何问题。
 
+
+## [I Space Station](https://www.luogu.com.cn/problem/P17707)
+
+**题意：** 给长度为 $n+1$ 的数组 $a_i$，初始位置在 $a_0$，每次可以跳到不大于当前经过的位置上的权值和的点。求经过所有点的方案数。
+
+记忆化搜索。略微卡常，虽然我的大常数做法过了。
+
+注意到值域仅有 $50$，我们开一个桶 $cur_i$ 表示 $i$ 被取了多少次，基于这个进行 dp。那么就会有：
+
+$$
+f(cur_1, cur_2, \dots) = \sum f(cur_1, \dots, cur_i + 1, cur_{i+1}, \dots) \times (cnt_i - cur_i)
+$$
+
+其中 $cnt_i$ 表示初始给的数组中 $i$ 出现的次数。然后做一个剪枝，如果当前总和已经达到 $50$ 就可以直接退出搜索。注意，上述情况只考虑了 $a_i>0$，若 $a_i=0$，就单独拿出来，最后再用插板法乘上 $A_n^{cnt_0}$ 即可。
+
+```cpp
+const int mod = 1e9 + 7;
+void solve() {
+    int n;
+    fr(n);
+    vector<ll> a(n + 1), cnt(51), fac(n + 2, 1), cur(55);
+    fr(a), --cnt[a[0]];
+    for (int x : a) ++cnt[x];
+    for (int i = 1; i <= n + 1; ++i) fac[i] = fac[i - 1] * i % mod;
+    auto bfp = [&](ll a, ll b = mod - 2) {
+        ll ans = 1;
+        for (; b; b >>= 1, a = a * a % mod)
+            if (b & 1) ans = ans * a % mod;
+        return ans;
+    };
+    if (a[0] >= 50) return fwn(fac[n]);
+    map<vector<ll>, ll> ans;
+    auto dfs = [&](this auto&& self, ll sum, ll l) -> ll {
+        if (sum >= 50 || !(n - cnt[0] - l + 1)) return fac[n - cnt[0] - l + 1];
+        if (ans.count(cur)) return ans[cur];
+        ll ret = 0;
+        for (int i = 1; i <= sum; ++i) {
+            if (cur[i] >= cnt[i]) continue;
+            ++cur[i];
+            ret = (ret + self(sum + i, l + 1) * (cnt[i] - cur[i] + 1) % mod)
+                % mod;
+            --cur[i];
+        }
+        return ans[cur] = ret;
+    };
+    fwn(dfs(a[0], 1) * fac[n] % mod * bfp(fac[n - cnt[0]]) % mod);
+}
+```
 
 ## [K Triangle](https://www.luogu.com.cn/problem/P17709)
 

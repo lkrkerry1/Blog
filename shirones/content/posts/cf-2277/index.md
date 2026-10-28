@@ -2,7 +2,7 @@
 title: "CF2277 (Div. 2) 做题记录"
 published: 2026-10-25
 updated: 2026-10-26
-description: 树上贪心重连 + LCA 求操作后的最远距离；二进制拆位推最少操作次数的递推，区间枚举求和
+description: 树上贪心重连 + LCA 求最远距离；二进制拆位推最少操作次数的递推，枚举求和 + 分三段前缀和
 tags: [模拟赛, Codeforces, "Div. 2"]
 category: 题解
 lang: zh_CN
@@ -86,5 +86,66 @@ void solve() {
     };
     for (ll i = l; i <= r; ++i) { ans = (ans + f(i) % mod + mod) % mod; }
     fwn(ans);
+}
+```
+
+## [D2. Number Operating (Hard Version)](https://codeforces.com/contest/2277/problem/D2)
+
+**题意：** 在 D1 的基础上去掉长度限制，即只有 $1\le l,r\le 10^{18}$。
+
+太逆天了，推式子的极致（？）。
+
+先考虑直接求出 $f$ 的前缀和 $g$，然后考虑 $f$ 的递推式中的 $\min$ 何时取。取前项时有，
+$$
+k+2^{k+1}-n< f(n-2^k+2)+k+1,\quad k=\lfloor \log n \rfloor
+$$
+移项化简得到，
+$$
+f(n-2^k+2)+n-2^k+2>2^k+1
+$$
+考虑令 $h(n)=f(n)+n$，由 $f(n)\le f(n+1)+1$ 得 $h(n)\le h(n+1)$，则取前项的 $n$ 为一段连续值，不妨设 $[1,w]$ 时后项较小。于是我们可以将 $g(n)$ 分为三段，$[1,2^k),[2^k,w],(w,n]$。注意为了保证复杂度正确，这里必须先将第一段拆出来，如果不拆开，$w$ 与 $n$ 在同一段内，复杂度会退化到 $O(n)$。
+
+第一段可以在预处理的时候直接计算，单个值是 $O(\log V)$。
+
+考虑中间那段，带入 $f(n)=f(n-2^k+2)+k+1$。
+$$
+\sum_{i=2^k}^wf(i)=\sum_{i=2^k}^wf(i-2^k+2)+(k+1)(w-2^k+1)=g(w-2^k+2)-g(1)+(k+1)(w-2^k+1)
+$$
+然后考虑第三段，$f(i)=k+2^{k+1}-i$ 是个等差数列，
+$$
+\sum_{i=w+1}^nf(i)=2^{-1}(n-w)(2^{k+2}+2k-w-n-1)
+$$
+然后规定初值 $g(0)=0,g(1)=1$。
+
+最后来考虑如何快速求出给定 $k$ 对应的右端点 $pos_k$。我们考虑设操作的代价为其造成变化量再加一，那么最终的总代价就是 $n-0+f(n)=h(n)$，而此时操作一代价为 $2^j+j-1$（进行一次操作二打断然后连续 $j$ 次操作一），操作二代价为 $0$，$pos_k$ 即为代价不超过 $2^k+1$ 时能到达的最远位置。注意到这个类似背包的问题可以贪心，直接从大到小枚举 $j$ 的值然后贪心取值即可。
+
+最终复杂度是 $O(\log^2 V+T\log V)$。注意取模！
+
+```cpp
+const int mod = 998244353, i2 = (mod + 1) >> 1;
+ll pos[64], val[64];
+inline ll g(ll n) {
+    if (n <= 1) return max(n, 0ll);
+    ll k = __lg(n), w = min(n, pos[k] + (1ll << k) - 2);
+    return (val[k] + g(w - (1ll << k) + 2) - 1
+               + (w - (1ll << k) + 1) % mod * (k + 1) % mod
+               + ((1ll << (k + 2)) + (k << 1) - w - n - 1) % mod * (n - w) % mod
+                   * i2 % mod
+               + mod)
+        % mod;
+}
+void init() {
+    for (int k = 0; k < 60; ++k) {
+        pos[k] = 1;
+        for (ll cur = (1ll << k) + 1, i = k; i >= 2; --i) {
+            if ((1ll << i) + i - 1 <= cur)
+                cur -= ((1ll << i) + i - 1), pos[k] += (1ll << i) - 2;
+        }
+        val[k] = g((1ll << k) - 1);
+    }
+}
+void solve() {
+    ll l, r;
+    fr(l, r), fwn(((g(r) - g(l - 1)) % mod + mod) % mod);
 }
 ```

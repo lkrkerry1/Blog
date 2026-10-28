@@ -1,7 +1,7 @@
 ---
 title: "Codeforces Round 1130 (Div. 2) 做题记录"
 published: 2026-10-26
-description: 贪心构造、二分答案、树形 DP+换根计算最大独立集合并
+description: 贪心构造、二分答案、树形 DP + 换根算最大独立集合并、区间合并 + 后缀和
 tags: [Codeforces, 模拟赛, "Div. 2"]
 category: 题解
 lang: zh_CN
@@ -253,5 +253,42 @@ int main() {
         }
     }
     return 0;
+}
+```
+
+## [E. Memory Cell Interception](https://codeforces.com/contest/2272/problem/E)
+
+**题意：** 给定一个初始为 $0$ 的数和两个仅包含 `RW` 的字符串，可以在不改变某个字符串内部的顺序的情况下将两个字符串穿插成一个字符串。完成后从左向右计算，若为 `R` 输出当前数值；若为 `W` 将该数修改为当前下标。对于两个字符串求出每个 `R` 能读出的不同数值有多少种。
+
+贪心+后缀和神题。
+
+先考虑某一个字符串，将另一个插入进来。
+
+如果当前位置 $i$ 的一个 `R` 之前最近的 `W` 在下标 $j$，那么将另一个字符串（长度为 $m$）的前缀插入 $j$ 前，剩余插到 $i$ 后面。不难发现此时该 $R$ 读出的范围为 $[j,j+m]$。再考虑插到中间，设插入串的最后一个 `W` 的下标为 $k$，那么答案为 $[i,i+k-1]$。
+
+再考虑当前位置前面没有 `W`，那么答案由另一个字符串中的所有 `W` 决定。对于每一个下标为 $j$ 的字符 `W`，都会贡献一个区间 $[j,i+j-1]$。直接朴素合并这些区间是 $O(nm)$ 的，我们可以先预处理每个位置何时出现区间合并。两个区间重合当且仅当 $i>j-j'$，直接枚举 `W` 所在下标进行更新即可。随后再做一个后缀和就能知道每个位置 $i$ 之后还有多少个活动区间，每次答案就增加活动区间数，就能得到当前区间覆盖的长度范围了。
+
+```cpp
+void solve() {
+    array<int, 2> n;
+    array<string, 2> s;
+    fr(n[0], n[1]), fr(s[0]), fr(s[1]);
+    for (auto& x : s) x = ' ' + x;
+    auto calc = [&](int id) {
+        int k = 0, cnt = 0;
+        vector<int> pos, suf(n[0] + n[1] + 1);
+        for (int i = 1; i <= n[id ^ 1]; ++i)
+            if (s[id ^ 1][i] == 'W') ++cnt, pos.emplace_back(i), k = i;
+        for (int i = 0; i + 1 < pos.size(); ++i) ++suf[pos[i + 1] - pos[i] - 1];
+        if (k) ++suf[n[0] + n[1]];
+        for (int i = n[0] + n[1]; i; --i) suf[i - 1] += suf[i];
+        for (int i = 1, c = 0; i <= n[id]; ++i) {
+            if (s[id][i] == 'R') {
+                if (!c) fw(cnt + 1), fw(' '), cnt += suf[i];
+                else fw(max(c + n[id ^ 1], k ? i + k - 1 : 0) - c + 1), fw(' ');
+            } else c = i;
+        }
+    };
+    calc(0), calc(1);
 }
 ```

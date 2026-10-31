@@ -1,8 +1,9 @@
 ---
 title: 线段树（一）普通线段树
 published: 2026-10-19
-description: 自用的函数内线段树板子，下标 1 开始，需 C++23
+description: "自用的函数内线段树板子，下标 1 开始，需 C++23"
 tags: [模板, 线段树]
+category: 笔记
 series: seg-tree
 seriesOrder: 1
 lang: zh_CN

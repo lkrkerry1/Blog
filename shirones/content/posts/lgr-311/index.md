@@ -104,46 +104,48 @@ void solve() {
 
 为了便于维护，我们可以从 $y$ 上减去填 $0$ 的位置就直接得到了构造出的数。若 $n\ge m$，那么乘积最大时恰好是把每个 $0$ 均匀的填到每个位置上，枚举一遍求积就行。若 $n<m\le 120$，那么 $n$ 特别小，直接开个小根堆暴力维护，每次将所需的按从小到大取出，然后算上对应的零再放回去即可。注意模数是 $998244853$。
 
+复习注：快速幂底数记得先取模，质数不要直接取模（这 sb 怎么对质数取模.jpg），堆元素不要直接取模，存原值！最后统计的时候记得先取模。情况一记得乘上剩余值！
+
 ```cpp
+const int mod = 998244853;
 void solve() {
-    ull n, x, y, z;
-    fr(n, x, y, z);
-    vector<pair<int, int>> vpi;
-    for (int i = 59; i >= 0; --i) {
-        int a = (x >> i) & 1, b = (y >> i) & 1, c = (z >> i) & 1;
-        if (a && (!b || c != (n & 1))) return fwn(-1);
-        if (!b && c) return fwn(-1);
-        if (!a && b) {
-            if (n == 1 || (!c && n < 3)) return fwn(-1);
-            vpi.emplace_back(i, (((n - 1) & 1) == c) ? 1 : 2);
-        }
-    }
-    int sum = 0;
-    for (auto [u, v] : vpi) sum += v;
-    auto bfp = [](ull a, ull b) {
+    auto bfp = [](ull a, ull b = mod - 2) {
         ull ans = 1;
-        a %= mod;
         for (; b; b >>= 1, a = a * a % mod)
             if (b & 1) ans = ans * a % mod;
         return ans;
     };
+    ull n, x, y, z;
+    fr(n, x, y, z);
+    vector<pair<int, int>> zp;
+    for (int i = 59; i >= 0; --i) {
+        int a = (x >> i) & 1, b = (y >> i) & 1, c = (z >> i) & 1;
+        if (a && (!b || (n & 1) != c)) return fwn(-1);
+        if (!b && c) return fwn(-1);
+        if (!a && b) {
+            if (n == 1 || (n == 2 && !c)) return fwn(-1);
+            zp.emplace_back(i, ((n - 1) & 1) == c ? 1 : 2);
+        }
+    }
+    int sum = 0;
+    for (auto [i, v] : zp) sum += v;
     ull ans = 1;
-    if (sum <= n) {
-        for (auto [u, v] : vpi) {
-            ull cur = (y - (1ull << u)) % mod;
-            ans = ans * cur % mod;
-            if (v > 1) ans = ans * cur % mod;
+    if (n >= sum) {
+        for (auto [i, v] : zp) {
+            ull tmp = y - (1ull << i);
+            tmp %= mod, ans = ans * tmp % mod;
+            if (v == 2) ans = ans * tmp % mod;
         }
-        ans = ans * bfp(y, n - sum) % mod;
+        ans = ans * bfp(y % mod, n - sum) % mod;
     } else {
-        priority_queue<ull, vector<ull>, greater<>> pq;
-        for (int i = 0; i < n; ++i) pq.emplace(0);
-        for (auto [u, v] : vpi) {
+        priority_queue<ull> pq;
+        for (int i = 1; i <= n; ++i) pq.emplace(y);
+        for (auto [i, v] : zp) {
             vector<ull> tmp(v);
-            for (auto& x : tmp) x = pq.top(), pq.pop();
-            for (auto& x : tmp) pq.emplace(x + (1ull << u));
+            for (auto& t : tmp) t = pq.top(), pq.pop();
+            for (auto& t : tmp) pq.emplace(t - (1ull << i));
         }
-        while (pq.size()) ans = ans * ((y - pq.top()) % mod) % mod, pq.pop();
+        while (pq.size()) ans = ans * (pq.top() % mod) % mod, pq.pop();
     }
     fwn(ans);
 }

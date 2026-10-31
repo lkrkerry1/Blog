@@ -93,60 +93,50 @@ void solve() {
 
 首先我们发现如果两个位置的三个数组对应相等，则之后的操作没办法将其分开，也就是说我们可以将三个数组压在一个 `ull` 里，每个记录包含的大小。此后的操作只能将多个 `ull` 段落合并而不能分裂。然后考虑如何快速寻找某一数列值为指定 $x$ 的位置。我们可以建立一个链表将这些相同元素的下标装进去，之后修改时只需要修改链表的表头连接到新的位置就行。答案更新只需要利用前面维护的大小就行。最终复杂度 $O(n\log n)$，因为处理前要排序方便寻找相同位置。
 
+修改注：复习时使用了纯 stl 写法，据说常数很大但其实跑得飞快。由于写的时候滥用 stl 这里补充一下， `lst[i]` 存储了 `i` 位置值为特定值的块有哪些，`cnt` 就是块桶。然后就暴力。
+
 ```cpp
-const int N = 1e6 + 5;
-const ull mask = (1 << 20) - 1;
-int head[3][N], tot;
-struct node {
-    int a, b, c, cnt, nxt[3];
-} nd[N << 1];
-inline void insert(int x, int d, int v) {
-    nd[x].nxt[d] = head[d][v], head[d][v] = x;
-}
-void init() { }
 void solve() {
     int n, m;
-    fr(n, m), memset(head, -1, sizeof head);
-    vector<ull> key(n);
-    {
-        vector<ull> a(n), b(n);
-        fr(a), fr(b);
-        for (ull i = 0, c; i < n; ++i)
-            fr(c), key[i] = a[i] << 40 | b[i] << 20 | c;
-        ranges::sort(key);
+    fr(n, m);
+    vector<array<int, 3>> v(n);
+    for (int j = 0; j < 3; ++j)
+        for (int i = 0; i < n; ++i) fr(v[i][j]);
+    map<array<int, 3>, int> cnt;
+    array<unordered_map<int, vector<array<int, 3>>>, 3> lst;
+    array<ll, 3> s { };
+    for (auto& x : v) {
+        ++cnt[x];
+        for (int i = 0; i < 3; ++i) s[i] += x[i];
     }
-    ll sa = 0, sb = 0, sc = 0;
-    for (int i = 0, cnt = 1; i < n; i += cnt) {
-        for (cnt = 1; i + cnt < n && key[i + cnt] == key[i]; ++cnt);
-        ll a = key[i] >> 40, b = (key[i] >> 20) & mask, c = key[i] & mask;
-        nd[++tot] = { a, b, c, cnt }, insert(tot, 0, a), insert(tot, 1, b);
-        insert(tot, 2, c), sa += a * cnt, sb += b * cnt, sc += c * cnt;
+    for (auto& x : lst) x.reserve(cnt.size() << 1);
+    for (auto& [x, v] : cnt) {
+        for (auto [i, l] : lst | views::enumerate) l[x[i]].emplace_back(x);
     }
     for (int op, x, y, z; m--;) {
-        fr(op, x, y, z);
+        fr(op, x, y, z), --op;
+        auto it = lst[op].find(x);
         ll sum = 0;
-        int cur = head[--op][x];
-        head[op][x] = -1;
-        for (ll nxt, cnt; cur != -1; cur = nxt) {
-            nxt = nd[cur].nxt[op], sum += (cnt = nd[cur].cnt);
-            if (!cnt) continue;
-            if (op == 0) sb -= cnt * nd[cur].b, sc -= cnt * nd[cur].c;
-            else {
-                sa -= cnt * nd[cur].a;
-                op == 1 ? (sc -= cnt * nd[cur].c) : (sb -= cnt * nd[cur].b);
+        if (it != lst[op].end()) {
+            for (auto& x : it->second) {
+                auto cur = cnt.find(x);
+                if (cur == cnt.end()) continue;
+                for (int i = 0; i < 3; ++i)
+                    if (i != op) s[i] -= (ll)cur->second * x[i];
+                sum += cur->second, cnt.erase(cur);
             }
-            nd[cur].cnt = 0;
+            it->second.clear();
         }
         if (sum) {
-            if (op == 0)
-                nd[++tot] = { x, y, z, sum }, sb += sum * y, sc += sum * z;
-            else if (op == 1)
-                nd[++tot] = { y, x, z, sum }, sa += sum * y, sc += sum * z;
-            else nd[++tot] = { y, z, x, sum }, sa += sum * y, sb += sum * z;
-            insert(tot, 0, nd[tot].a), insert(tot, 1, nd[tot].b);
-            insert(tot, 2, nd[tot].c);
+            array<int, 3> tmp;
+            if (op == 0) tmp = { x, y, z }, s[1] += sum * y, s[2] += sum * z;
+            if (op == 1) tmp = { y, x, z }, s[0] += sum * y, s[2] += sum * z;
+            if (op == 2) tmp = { y, z, x }, s[0] += sum * y, s[1] += sum * z;
+            cnt[tmp] += sum;
+            for (auto [i, l] : lst | views::enumerate)
+                l[tmp[i]].emplace_back(tmp);
         }
-        fwn(sa, sb, sc);
+        fwn(s[0], s[1], s[2]);
     }
 }
 ```

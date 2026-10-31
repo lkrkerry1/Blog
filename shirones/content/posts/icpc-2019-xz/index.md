@@ -1,6 +1,7 @@
 ---
-title: ICPC 2019 区域赛徐州站重现赛 做题记录
+title: "ICPC 2019 区域赛徐州站重现赛 做题记录"
 published: 2026-10-22
+updated: 2026-10-30
 description: 异或特性、质数判断、打表、树的重心
 tags: [模拟赛, 洛谷, xCPC]
 category: 题解
@@ -132,7 +133,6 @@ int main() {
 ## [M Kill the tree](https://www.luogu.com.cn/problem/P17743)
 
 **题意：** 给一棵树，求每个子树的 **全部** 重心。
-
 
 我场上混淆了这个和 CF685B（这个是求一个重心）。这一题也是利用类似的结论：子树重心位于根节点所在重链上。
 

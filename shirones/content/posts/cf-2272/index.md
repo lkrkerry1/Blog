@@ -1,7 +1,7 @@
 ---
-title: "Codeforces Round 1130 (Div. 2) 做题记录"
+title: "CF2272 (Div. 2) 做题记录"
 published: 2026-10-26
-description: 贪心构造、二分答案、树形 DP + 换根算最大独立集合并、区间合并 + 后缀和
+description: "贪心构造、二分答案、树形 DP + 换根算最大独立集合并、区间合并 + 后缀和"
 tags: [Codeforces, 模拟赛, "Div. 2"]
 category: 题解
 lang: zh_CN

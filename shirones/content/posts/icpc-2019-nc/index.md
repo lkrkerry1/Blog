@@ -1,7 +1,8 @@
 ---
 title: "ICPC 2019 区域赛南昌站重现赛 做题记录"
 published: 2026-10-31
-description: "二进制统计+简单组合、贪心+最大生成树、Ad-hoc 乱搞题、小模拟"
+updated: 2026-11-01
+description: "二进制统计+简单组合、贪心+最大生成树、树上启发式合并（dsu on tree）、拉格朗日插值"
 tags: [模拟赛, 洛谷, xCPC]
 category: 题解
 lang: zh_CN
@@ -119,6 +120,78 @@ void solve() {
 }
 ```
 
+## [K Tree](https://www.luogu.com.cn/problem/P17814)
+
+**题意：** 求点权树上的有序点对数：路径长度不超过 $k$、两端点非祖先关系，且路径点权和等于 LCA 点权的两倍。
+
+这是一道统计类树上问题，并且与子树相关，考虑树上启发式合并。
+
+对每种点权，开一个树状数组，将对应点权的深度离散化之后插入，每次查询只需查找对应点权的深度前缀和即可。离散化后深度最多 $n$ 个，最终复杂度为 $O(n\log^2n)$。记得乘二。
+
+```cpp
+struct FWT {
+    vector<int> t;
+    int n = 0;
+    FWT(int n = 0) : n(n) { t.resize(n + 1); }
+    inline void c(int p, int d) {
+        for (; p <= n; p += p & -p) t[p] += d;
+    }
+    inline int q(int p) {
+        int ans = 0;
+        for (; p; p -= p & -p) ans += t[p];
+        return ans;
+    }
+};
+void solve() {
+    int n, k;
+    fr(n, k);
+    vector<int> va(n + 1);
+    frn(va, n);
+    vector<vector<int>> gr(n + 1), dl(n + 1);
+    for (int u, i = 2; i <= n; ++i) fr(u), gr[u].emplace_back(i);
+    vector<FWT> tr;
+    vector<int> sz(n + 1), son(n + 1), dep(n + 1), pos(n + 1);
+    auto dfs = [&](this auto&& self, int u) -> void {
+        sz[u] = 1;
+        for (int v : gr[u]) {
+            dep[v] = dep[u] + 1, self(v), sz[u] += sz[v];
+            if (sz[v] > sz[son[u]]) son[u] = v;
+        }
+    };
+    ll ans = 0;
+    auto dsu = [&](this auto&& self, int u, bool f) -> void {
+        auto update = [&](this auto&& self, int u, int d) -> void {
+            tr[va[u]].c(pos[u], d);
+            for (int v : gr[u]) self(v, d);
+        };
+        auto calc = [&](this auto&& self, int u, int z) -> void {
+            ans += [&](int w, int d) {
+                if (w < 0 || w > n || d < 0) return 0;
+                return tr[w].q(ranges::upper_bound(dl[w], d) - dl[w].begin());
+            }((va[z] << 1) - va[u], (dep[z] << 1) + k - dep[u]);
+            for (int v : gr[u]) self(v, z);
+        };
+        for (int v : gr[u])
+            if (v != son[u]) self(v, false);
+        if (son[u]) self(son[u], true);
+        for (int v : gr[u])
+            if (v != son[u]) calc(v, u), update(v, 1);
+        tr[va[u]].c(pos[u], 1);
+        if (!f) update(u, -1);
+    };
+    dfs(1);
+    for (int i = 1; i <= n; ++i) dl[va[i]].emplace_back(dep[i]);
+    for (auto [i, d] : dl | views::enumerate) {
+        ranges::sort(d), d.erase(unique(d.begin(), d.end()), d.end());
+        tr.emplace_back(d.size());
+    }
+    for (int i = 1; i <= n; ++i) {
+        pos[i] = ranges::lower_bound(dl[va[i]], dep[i]) - dl[va[i]].begin() + 1;
+    }
+    dsu(1, true), fwn(ans << 1);
+}
+```
+
 ## [L Who is the Champion](https://www.luogu.com.cn/problem/P17815)
 
 **题意：** 给定 $n$ 支队伍之间的进球数，胜者得 $3$ 分，负者不得分，平局各 $1$ 分。分数相同比较净胜球数。求总冠军。
@@ -149,5 +222,77 @@ void solve() {
     }
     if (f) fwn("play-offs");
     else fwn(mx);
+}
+```
+
+## [M XOR Sum](https://www.luogu.com.cn/problem/P17816)
+
+**题意：** 求 $\sum_{k=1}^t\sum_{i=x}^y\operatorname{xor}_{j=1}^{i^k}j$。
+
+首道独立完成的紫题！相当多细节的拉格朗日插值练习题。
+
+先交换求和顺序，由异或前缀和的结论可知：
+$$
+\sum_{k=1}^t\operatorname{xor}_{j=1}^{i^k}=
+\begin{cases}
+\dfrac{i^{t+1}-i}{i-1}, & i\equiv 0 \pmod 4 \\
+t, & i\equiv 1 \pmod 4 \\
+\dfrac{i^{t+1}-1}{i-1}, & i\equiv 2 \pmod 4 \\
+\left\lfloor\dfrac t2\right\rfloor, & i\equiv 3 \pmod 4
+\end{cases}
+$$
+
+我们发现这是个最高 $t$ 次的多项式，再套上外层求和后至多为 $t+1$ 次。考虑求出上式的前缀和 $G(n)$，于是答案为 $G(y)-G(x-1)$。
+
+按模 $4$ 的余数把 $[1,n]$ 内的整数分类计数，分别用插值求出对应点值，然后相加即可。此处插值需要 $t+2$ 个点，复杂度为 $O(t\log y)$。
+
+这里其实余数为 $1,3$ 可以不用插值直接算，但我为了写着方便一起做了。
+
+```cpp
+const int mod = 1e9 + 7;
+void solve() {
+    ll t, l, r;
+    fr(t, l, r);
+    vector<ll> fact(t + 3, 1);
+    array<vector<ll>, 4> f;
+    for (auto& x : f) x.resize(t + 3);
+    for (int i = 1; i <= t + 2; ++i) fact[i] = fact[i - 1] * i % mod;
+    auto bfp = [&](ll a, ll b = mod - 2) {
+        ll ans = 1;
+        for (a %= mod; b; b >>= 1, a = a * a % mod)
+            if (b & 1) ans = ans * a % mod;
+        return ans;
+    };
+    for (int i = 1; i <= t + 2; ++i) {
+        f[0][i]
+            = (bfp(i << 2, t + 1) - (i << 2) + mod) * bfp((i << 2) - 1) % mod;
+        f[1][i] = t;
+        f[2][i] = (bfp(i << 2 | 2, t + 1) - 1 + mod) * bfp(i << 2 | 1) % mod;
+        f[3][i] = (t >> 1);
+    }
+    f[1][0] = t, f[2][0] = bfp(2, t + 1) - 1, f[3][0] = t >> 1;
+    for (auto& x : f)
+        for (int i = 1; i < x.size(); ++i) { x[i] = (x[i - 1] + x[i]) % mod; }
+    auto g = [&](const vector<ll>& f, ll n) -> ll {
+        if (n < 0) return 0;
+        if (n < f.size()) return f[n];
+        if (n % mod < f.size()) return f[n % mod];
+        ll pre = 1, ans = 0, k = f.size() - 1;
+        for (int i = 1; i <= k; ++i) pre = pre * ((n - i) % mod) % mod;
+        for (int i = 1, s = ((k - i) & 1) ? -1 : 1; i <= k; ++i, s = -s) {
+            ans = (ans
+                      + f[i] * pre % mod * bfp(n - i) % mod * bfp(fact[i - 1])
+                          % mod * bfp(fact[k - i]) * s % mod)
+                % mod;
+        }
+        return ans;
+    };
+    auto calc = [&](ll n) -> ll {
+        ll ret = 0;
+        for (int i = 0; i < 4; ++i)
+            ret = (ret + (n >= i ? g(f[i], (n - i) >> 2) : 0)) % mod;
+        return ret;
+    };
+    fwn(((calc(r) - calc(l - 1)) % mod + mod) % mod);
 }
 ```

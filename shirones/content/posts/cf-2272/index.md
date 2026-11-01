@@ -213,46 +213,26 @@ void solve() {
 **std 做法：** 直接贪心取某个森林的叶子节点的父节点，不难发现整个树必然存在一个最大独立集不包含该点（如果包含可以将这个点换为它的子节点（叶子）肯定不会变差）。于是用该点作为根连接其他所有树的任意节点即可。如果没有叶子都是孤立点，那么就任选即可。
 
 ```cpp
-#include<bits/stdc++.h>
-using namespace std;
-
-int main() {
-    int t;
-    cin >> t;
-    while (t--) {
-        int k;
-        cin >> k;
-        vector<vector<vector<int>>> trees(k);
-        for (int i = 0; i < k; i++) {
-            int n;
-            cin >> n;
-            trees[i].assign(n, {});
-            for (int j = 0; j < n - 1; j++) {
-                int x, y;
-                cin >> x >> y;
-                x--, y--;
-                trees[i][x].push_back(y);
-                trees[i][y].push_back(x);
-            }
-        }
-
-        int ri = -1, rj = -1;
-        for (int i = 0; i < k && ri == -1; i++) {
-            if (trees[i].size() > 1) {
-                for (int j = 0; j < trees[i].size() && ri == -1; j++) {
-                    if (trees[i][j].size() == 1) {
-                        ri = i, rj = trees[i][j][0];
-                    }
-                }
-            }
-        }
-        if (ri == -1) ri = rj = 0;
-        for (int i = 0; i < k; i++) {
-            if (i == ri) continue;
-            cout << i + 1 << " 1 " << ri + 1 << " " << rj + 1 << "\n";
+void solve() {
+    int k;
+    fr(k);
+    vector<vector<vector<int>>> gr(k + 1);
+    for (int i = 1, n; i <= k; ++i) {
+        fr(n), gr[i].resize(n + 1);
+        for (int j = 1, u, v; j < n; ++j)
+            fr(u, v), gr[i][u].emplace_back(v), gr[i][v].emplace_back(u);
+    }
+    int ri = 0, rj = 0;
+    for (int i = 1; i <= k && !ri; ++i) {
+        for (auto [j, g] : gr[i] | views::enumerate) {
+            if (!j) continue;
+            if (rj) break;
+            if (g.size() == 1) ri = i, rj = g[0];
         }
     }
-    return 0;
+    if (!ri && !rj) ri = rj = 1;
+    for (int i = 1; i <= k; ++i)
+        if (i != ri) fwn(i, 1, ri, rj);
 }
 ```
 
@@ -264,30 +244,31 @@ int main() {
 
 先考虑某一个字符串，将另一个插入进来。
 
-如果当前位置 $i$ 的一个 `R` 之前最近的 `W` 在下标 $j$，那么将另一个字符串（长度为 $m$）的前缀插入 $j$ 前，剩余插到 $i$ 后面。不难发现此时该 $R$ 读出的范围为 $[j,j+m]$。再考虑插到中间，设插入串的最后一个 `W` 的下标为 $k$，那么答案为 $[i,i+k-1]$。
+如果当前位置 $i$ 的一个 `R` 之前最近的 `W` 在下标 $j$，那么将另一个字符串（长度为 $m$）的前缀插入 $j$ 前，剩余插到 $i$ 后面。不难发现此时该 $R$ 读出的范围为 $[j,j+m]$。再考虑插到中间，设插入串的最后一个 `W` 的下标为 $k$，那么答案为 $[i,i+k-1]$。两个区间的并就是 $[j,\max(i+k-1,j+m)]$。
 
-再考虑当前位置前面没有 `W`，那么答案由另一个字符串中的所有 `W` 决定。对于每一个下标为 $j$ 的字符 `W`，都会贡献一个区间 $[j,i+j-1]$。直接朴素合并这些区间是 $O(nm)$ 的，我们可以先预处理每个位置何时出现区间合并。两个区间重合当且仅当 $i>j-j'$，直接枚举 `W` 所在下标进行更新即可。随后再做一个后缀和就能知道每个位置 $i$ 之后还有多少个活动区间，每次答案就增加活动区间数，就能得到当前区间覆盖的长度范围了。
+再考虑当前位置前面没有 `W`，那么答案由另一个字符串中的所有 `W` 决定。对于每一个下标为 $j$ 的字符 `W`，都会贡献一个区间 $[j,i+j-1]$。直接朴素合并这些区间是 $O(nm)$ 的，我们可以先预处理每个位置何时出现区间合并。两个区间重合当且仅当 $i>j-j'$，直接枚举 `W` 所在下标进行更新即可（这里还要在最后额外加一个标记保证每个区间最后都结束了）。随后再做一个后缀和就能知道每个位置 $i$ 之后还有多少个活动区间，每次答案就增加活动区间数，就能得到当前区间覆盖的长度范围了。
 
 ```cpp
 void solve() {
     array<int, 2> n;
     array<string, 2> s;
-    fr(n[0], n[1]), fr(s[0]), fr(s[1]);
+    fr(n[0], n[1]), fr(s[0], s[1]);
     for (auto& x : s) x = ' ' + x;
     auto calc = [&](int id) {
         int k = 0, cnt = 0;
         vector<int> pos, suf(n[0] + n[1] + 1);
         for (int i = 1; i <= n[id ^ 1]; ++i)
-            if (s[id ^ 1][i] == 'W') ++cnt, pos.emplace_back(i), k = i;
-        for (int i = 0; i + 1 < pos.size(); ++i) ++suf[pos[i + 1] - pos[i] - 1];
+            if (s[id ^ 1][i] == 'W') ++cnt, pos.emplace_back(k = i);
+        for (int i = 1; i < pos.size(); ++i) ++suf[pos[i] - pos[i - 1] - 1];
         if (k) ++suf[n[0] + n[1]];
         for (int i = n[0] + n[1]; i; --i) suf[i - 1] += suf[i];
-        for (int i = 1, c = 0; i <= n[id]; ++i) {
+        for (int i = 1, j = 0; i <= n[id]; ++i) {
             if (s[id][i] == 'R') {
-                if (!c) fw(cnt + 1), fw(' '), cnt += suf[i];
-                else fw(max(c + n[id ^ 1], k ? i + k - 1 : 0) - c + 1), fw(' ');
-            } else c = i;
+                if (!j) fw(cnt + 1), cnt += suf[i], fw(' ');
+                else fw(max(j + n[id ^ 1], k ? i + k - 1 : 0) - j + 1), fw(' ');
+            } else j = i;
         }
+        fw('\n');
     };
     calc(0), calc(1);
 }

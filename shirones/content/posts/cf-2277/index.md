@@ -1,8 +1,8 @@
 ---
 title: "CF2277 (Div. 2) 做题记录"
 published: 2026-10-25
-updated: 2026-10-26
-description: 树上贪心重连 + LCA 求最远距离；二进制拆位推最少操作次数的递推，枚举求和 + 分三段前缀和
+updated: 2026-11-01
+description: 树上贪心重连 + LCA 求最远距离；二进制拆位推最少操作次数的递推，枚举求和 + 分三段前缀和；交互题按子树大小排序反推父节点
 tags: [模拟赛, Codeforces, "Div. 2"]
 category: 题解
 lang: zh_CN
@@ -147,5 +147,42 @@ void init() {
 void solve() {
     ll l, r;
     fr(l, r), fwn(((g(r) - g(l - 1)) % mod + mod) % mod);
+}
+```
+
+## [E. Tree Guessing](https://codeforces.com/contest/2277/problem/E)
+
+**题意：** 交互库藏起了一个节点数为 $n$ 的树，你可以通过不超过 $2n-2$ 次询问猜出这棵树。每次询问给出一个 $x$ 和 $[1,n]$ 的一个排列 $p_i$，交互库返回每个点到 $x$ 的路径上经过的点对应的 $p_i$ 的值的最大值之和。
+
+万恶的 Ad-hoc。
+
+不妨设 $1$ 为根。记 $q(u)$ 为固定 $x=u$ 时的询问返回值，于是我们先令 $p_1=n-1$，随后分别使 $p_2,\dots,p_n$ 为 $n$，显然这样可以求出每个子树的大小 $sz_u=q(u)-n(n-1)$。
+
+随后按照 `sz` 从大到小排序。依次将排序后第 $2\sim n$ 位的点赋值为 $1$，其他点维持原顺序赋值，显然这样可以求出每个子树的父节点 $fa_u=q(u)-\frac{n(n+1)}2$，随后输出即可。
+
+```cpp
+void solve() {
+    int n;
+    cin >> n;
+    vector<int> sz(n + 1, n), rk(n + 1), fa(n + 1);
+    for (int i = 2, cur; i <= n; ++i) {
+        vector<int> a(n + 1);
+        for (int j = 1; j <= n; ++j) a[j] = j;
+        swap(a[1], a[n - 1]), swap(a[i], a[n]), cout << "? 1";
+        for (int j = 1; j <= n; ++j) cout << ' ' << a[j];
+        cout << endl, cin >> cur, sz[i] = cur - n * (n - 1);
+    }
+    for (int i = 1; i <= n; ++i) rk[i] = i;
+    sort(rk.begin() + 1, rk.end(), [&](int a, int b) { return sz[a] > sz[b]; });
+    for (int i = 2, cur; i <= n; ++i) {
+        vector<int> a(n + 1, 1);
+        for (int j = 1; j < i; ++j) a[rk[j]] = j + 1;
+        for (int j = i + 1; j <= n; ++j) a[rk[j]] = j;
+        cout << "? 1";
+        for (int j = 1; j <= n; ++j) cout << ' ' << a[j];
+        cout << endl, cin >> cur, fa[rk[i]] = rk[cur - (n * (n + 1) >> 1)];
+    }
+    cout << "!" << endl;
+    for (int i = 2; i <= n; ++i) cout << fa[i] << " " << i << endl;
 }
 ```

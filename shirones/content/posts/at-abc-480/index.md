@@ -1,6 +1,7 @@
 ---
-title: ABC480 做题记录
+title: "ABC480 做题记录"
 published: 2026-10-17
+updated: 2026-11-01
 description: 字符串近似匹配、区间覆盖、前缀拼接后的区间和、等差数列计数
 tags: [模拟赛, AtCoder, ABC]
 category: 题解
@@ -152,9 +153,30 @@ void solve() {
 }
 ```
 
+## [F - Cake Cutting](https://atcoder.jp/contests/abc480/tasks/abc480_f)
 
+**题意：** 给 $n$ 块蛋糕，将其平均分给 $m$ 个人，最少要切几刀。
 
+状压 dp。
 
+注意到 $n\le 20$，直接定义 $f(c)$ 当第 $i$ 块蛋糕已被考虑时 $c>>i$ 为一，于是可以递推。先算出当前状态剩余的蛋糕 $s$，然后加上新加入的蛋糕 $i$，求出需切刀数为 $\lfloor \frac{s+a_i-1}{e} \rfloor$，$e=\frac{\sum a_i}{m}$，为每个人分到的蛋糕量。
 
-
-
+```cpp
+void solve() {
+    ll n, m, s;
+    fr(n, m);
+    vector<ll> a(n), f(1 << n, 1e9);
+    fr(a), f[0] = 0, s = accumulate(a.begin(), a.end(), 0ll) / m;
+    for (int c = 0; c < (1 << n); ++c) {
+        if (f[c] >= 1e9) continue;
+        ll cur = 0;
+        for (int i = 0; i < n; ++i)
+            if ((c >> i) & 1) cur = (cur + a[i]) % s;
+        for (int i = 0; i < n; ++i) {
+            if ((c >> i) & 1) continue;
+            f[c | (1 << i)] = min(f[c | (1 << i)], f[c] + (cur + a[i] - 1) / s);
+        }
+    }
+    fwn(f[(1 << n) - 1]);
+}
+```

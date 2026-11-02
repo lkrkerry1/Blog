@@ -1,14 +1,98 @@
 ---
 title: "ICPC 2019 区域赛南昌站重现赛 做题记录"
 published: 2026-10-31
-updated: 2026-11-01
-description: "二进制统计+简单组合、贪心+最大生成树、树上启发式合并（dsu on tree）、拉格朗日插值"
+updated: 2026-11-02
+description: "离线操作树+可撤销并查集、二进制统计+简单组合、贪心+最大生成树、树上启发式合并（dsu on tree）、拉格朗日插值"
 tags: [模拟赛, 洛谷, xCPC]
 category: 题解
 lang: zh_CN
 draft: false
 ---
+
 打得还行，不过后面吃饭去了。虽然扫了一眼应该也写不出了。
+
+## [A 9102](https://www.luogu.com.cn/problem/P17804)
+
+**题意：** 维护一些部落和家族，一些家族属于一个部落，支持在第 $k$ 个操作后进行合并部落、删除家族、合并家族，查询两个家族是否同部落、查找部落总家族数。
+
+离线+可撤销并查集练习题。本来感觉是重工业，但其实还好。
+
+先将所有操作离线下来，第 $i$ 个操作在 $k$ 后相当于一条 $k\rightarrow i$ 的边，于是我们能建操作树，随后在上面 dfs。
+
+为了支持删除操作，我们维护一个数组 `cur` 代表某个家族所属的部落，如果该部落已被删除就设为 $0$。
+
+然后维护一个可撤销并查集，也就是按秩合并且没有路径压缩的并查集+栈维护历史。合并部落就直接 `merge`，合并家族（将某个家族加入另一个部落）就查询然后移过去，记得调整 `sz`。删除就调整 `cur`，随后调整 `sz`，查找类似。dfs 更新当前子树结束后回溯前清空所有修改即可。
+
+```cpp
+void solve() {
+    int n, m, tot;
+    fr(n, m), tot = n;
+    vector<int> op(m + 1), a(m + 1), b(m + 1), ans(m + 1), fa(n + m + 1),
+        sz(n + m + 1), rk(n + m + 1), cur(n + 1);
+    vector<vector<int>> gr(m + 1);
+    for (int i = 1; i <= n; ++i) sz[i] = 1, cur[i] = fa[i] = i;
+    for (int i = 1, k; i <= m; ++i) {
+        fr(op[i], k, a[i]), gr[k].emplace_back(i);
+        if (op[i] == 1 || op[i] == 3 || op[i] == 4) fr(b[i]);
+    }
+    vector<tuple<int, int, int>> his;
+    auto getf = [&](int x) {
+        for (; x != fa[x];) x = fa[x];
+        return x;
+    };
+    auto merge = [&](int x, int y) {
+        if (x == y) return;
+        if (rk[x] < rk[y]) swap(x, y);
+        his.emplace_back(0, y, fa[y]), his.emplace_back(2, x, sz[x]);
+        his.emplace_back(1, x, rk[x]), fa[y] = x, sz[x] += sz[y];
+        if (rk[x] == rk[y]) ++rk[x];
+    };
+    auto dfs = [&](this auto&& self, int u) -> void {
+        int tmp = his.size(), r, ra, rb;
+        switch (op[u]) {
+        case 1:
+            if (!cur[a[u]] || !cur[b[u]]) break;
+            merge(getf(cur[a[u]]), getf(cur[b[u]]));
+            break;
+        case 2:
+            if (!cur[a[u]]) break;
+            r = getf(cur[a[u]]);
+            his.emplace_back(2, r, sz[r]), his.emplace_back(3, a[u], cur[a[u]]);
+            --sz[r], cur[a[u]] = 0;
+            break;
+        case 3:
+            if (!cur[a[u]] || !cur[b[u]]) break;
+            ra = getf(cur[a[u]]), rb = getf(cur[b[u]]);
+            if (ra == rb) break;
+            his.emplace_back(2, ra, sz[ra]), --sz[ra], rk[++tot] = 0;
+            his.emplace_back(3, a[u], cur[a[u]]), fa[tot] = tot, sz[tot] = 1;
+            cur[a[u]] = tot, merge(tot, rb);
+            break;
+        case 4:
+            if (cur[a[u]] && cur[b[u]])
+                ans[u] = (getf(cur[a[u]]) == getf(cur[b[u]]));
+            break;
+        default:
+            if (cur[a[u]]) ans[u] = sz[getf(cur[a[u]])];
+            break;
+        }
+        for (int v : gr[u]) self(v);
+        for (int i = his.size() - 1; i >= tmp; --i) {
+            auto [t, id, v] = his[i];
+            if (t == 0) fa[id] = v;
+            else if (t == 1) rk[id] = v;
+            else if (t == 2) sz[id] = v;
+            else cur[id] = v;
+        }
+        his.resize(tmp);
+    };
+    dfs(0);
+    for (int i = 1; i <= m; ++i) {
+        if (op[i] == 4) fwn(ans[i] ? "Yes" : "No");
+        else if (op[i] == 5) fwn(ans[i]);
+    }
+}
+```
 
 ## [C And and Pair](https://www.luogu.com.cn/problem/P17806)
 
@@ -126,7 +210,7 @@ void solve() {
 
 这是一道统计类树上问题，并且与子树相关，考虑树上启发式合并。
 
-对每种点权，开一个树状数组，将对应点权的深度离散化之后插入，每次查询只需查找对应点权的深度前缀和即可。离散化后深度最多 $n$ 个，最终复杂度为 $O(n\log^2n)$。记得乘二。
+对每种点权，开一个树状数组，将对应点权的深度离散化之后插入，每次查询只需查找对应点权的深度前缀和即可。离散化后深度最多 $n$ 个，最终复杂度为 $O(n\log^2 n)$。记得乘二。
 
 ```cpp
 struct FWT {
@@ -232,6 +316,7 @@ void solve() {
 首道独立完成的紫题！相当多细节的拉格朗日插值练习题。
 
 先交换求和顺序，由异或前缀和的结论可知：
+
 $$
 \sum_{k=1}^t\operatorname{xor}_{j=1}^{i^k}=
 \begin{cases}

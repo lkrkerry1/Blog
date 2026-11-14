@@ -1,7 +1,7 @@
 ---
 title: "ICPC 2019 区域赛南昌站重现赛 做题记录"
 published: 2026-10-31
-updated: 2026-11-02
+updated: 2026-11-04
 description: "离线操作树+可撤销并查集、二进制统计+简单组合、贪心+最大生成树、树上启发式合并（dsu on tree）、拉格朗日插值"
 tags: [模拟赛, 洛谷, xCPC]
 category: 题解
@@ -379,5 +379,49 @@ void solve() {
         return ret;
     };
     fwn(((calc(r) - calc(l - 1)) % mod + mod) % mod);
+}
+```
+
+复习时将四种情况合并了，注意到 $n\equiv 2$ 的情况只是比 $n\equiv 0$ 多 $1$，于是只需要对一种情况插值。其他情况直接加即可。
+
+```cpp
+using lll = __int128_t;
+const int mod = 1e9 + 7;
+void solve() {
+    ll t, x, y;
+    fr(t, x, y);
+    auto bfp = [&](ll a, ll b = mod - 2) {
+        ll ans = 1;
+        for (a %= mod; b; b >>= 1, a = (lll)a * a % mod)
+            if (b & 1) ans = (lll)ans * a % mod;
+        return ans;
+    };
+    vector<ll> fac(t + 3, 1), f(t + 3);
+    for (int i = 1; i <= t + 2; ++i) fac[i] = fac[i - 1] * i % mod;
+    for (int i = 1; i <= t + 2; ++i) fac[i] = bfp(fac[i]);
+    for (int i = 1; i <= t + 2; ++i)
+        f[i] = (bfp(i << 1, t + 1) - (i << 1) + mod) * bfp((i << 1) - 1) % mod;
+    for (int i = 1; i <= t + 2; ++i) f[i] = (f[i] + f[i - 1]) % mod;
+    auto g = [&](lll n) -> ll {
+        if (n < 0) return 0;
+        if (n && n % mod < f.size()) return f[n % mod];
+        lll pre = 1, ans = 0;
+        for (int i = 1; i <= t + 2; ++i) pre = pre * ((n - i) % mod) % mod;
+        for (int i = 1, s = ((t - i) & 1) ? -1 : 1; i <= t + 2; ++i, s = -s) {
+            ans = (ans
+                      + f[i] * pre % mod * bfp(n - i) % mod * fac[i - 1] % mod
+                          * fac[t + 2 - i] * s % mod)
+                % mod;
+        }
+        return (ans % mod + mod) % mod;
+    };
+    auto calc = [&](lll n) -> lll {
+        if (n <= 0) return 0;
+        lll ret = ((n + 2) >> 2) % mod + ((n + 3) >> 2) * t % mod
+            + ((n + 1) >> 2) * (t >> 1) % mod;
+        ret = (ret % mod + g(n >> 1)) % mod;
+        return ret;
+    };
+    fwn(((calc(y) - calc(x - 1)) % mod + mod) % mod);
 }
 ```

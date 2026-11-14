@@ -127,3 +127,31 @@ void solve() {
     for (int i = 2; i <= n; ++i) fwn(ans[i]);
 }
 ```
+
+看到的一个更好写的做法。虽然直接 dijkstra 没办法将路径存下来，我们考虑对路径进行哈希，顺便计算最短路径长度。考虑使用一个大数乘以 $998244353$ 作为模数维护一个有关路径的值，这个值的大小关系大概率可以描述路径的字典序。并且由于这个大数可以随机，基本上卡不了。然后就直接写 dijkstra 就行。
+
+```cpp
+const ll mod = 998244353, rd = 998244353e9;
+using lll = __int128_t;
+void solve() {
+    int n, m;
+    fr(n, m);
+    vector<vector<pair<int, int>>> gr(n + 1);
+    for (int u, v, w; m--;) fr(u, v, w), gr[u].emplace_back(v, w);
+    vector<pair<int, ll>> dis(n + 1, { 1e9, 1e18 });
+    priority_queue<pair<pair<int, ll>, int>, vector<pair<pair<int, ll>, int>>,
+        greater<>>
+        pq;
+    pq.emplace(dis[1] = { 0, 0 }, 1);
+    while (pq.size()) {
+        auto [p, u] = pq.top();
+        pq.pop();
+        if (p != dis[u]) continue;
+        for (auto [v, w] : gr[u]) {
+            auto d = pair { p.first + 1, ((lll)p.second * 10 + w) % rd };
+            if (d < dis[v]) dis[v] = d, pq.emplace(d, v);
+        }
+    }
+    for (int i = 2; i <= n; ++i) fwn(dis[i].second % mod);
+}
+```

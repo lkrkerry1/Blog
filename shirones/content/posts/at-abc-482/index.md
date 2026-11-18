@@ -9,6 +9,8 @@ draft: false
 ---
 AB 是签到，跳过。这场前面很快，但在 E 卡了很久。不过 F 比较难，所以最后 perf 也有 1600+。
 
+补题的时候发现 F 其实挺简单？不过这题 rating 有 2400- 比较神奇。
+
 ## [C - Band Count](https://atcoder.jp/contests/abc482/tasks/abc482_c)
 
 **题意：** 给定 $n$ 个整点，$q$ 组询问，每次询问 $[l,r]$ 行内或列内的点个数。
@@ -135,5 +137,58 @@ void solve() {
         for (int i = 1; i <= n; ++i) ans += (ll)tmp[i] * (tmp[i] - 1) / 2;
     }
     fwn(ans);
+}
+```
+
+## [F - Mod M Divisor](https://atcoder.jp/contests/abc482/tasks/abc482_f)
+
+**题意：** 给定正整数 $n,m$，对每个 $k=0,\dots,m-1$ 求最小的 $t$ 满足 $x|n^t,x\equiv k(\mod m)$。
+
+先对 $n$ 质因数分解，$n=\prod p_i^{a_i}$，于是目标求 $\max_i\lfloor\frac{x_i}{a_i}\rfloor$ 的最小值。考虑 dp，设 $f(i,j)$ 为处理到第 $i$ 个质因数，且当前余数为 $j$ 的最小的 $t$，于是每次仅有 $i=0$ 时才会使答案增加 $1$。
+
+考虑类似建图的方式进行 dp：
+$$
+f(i,j)\rightarrow f(i+1,jp_i^e),e\in [0,m)
+$$
+我们发现这个图仅有边权为 $0,1$ 的边，需要求最短路，可以 01bfs，即进行 dijkstra 但不使用优先队列，而是直接将 0 边放到队列开头，1 边放到队列末尾。
+
+注意到给定范围最多有不到 30 个质数乘积，这样 dp 的复杂度足以通过。最后统计答案时记得特判 $f=0$，题目要求至少为 $1$。
+
+```cpp
+void solve() {
+    ll n, m, tmp;
+    fr(n, m), tmp = n;
+    if (n == 1) {
+        for (int i = 0; i < m; ++i) fwn(n % m == i ? 1 : -1);
+        return;
+    }
+    vector<pair<int, int>> p;
+    for (ll i = 2, cnt; i * i <= tmp; ++i) {
+        for (cnt = 0; tmp % i == 0; ++cnt) tmp /= i;
+        if (cnt) p.emplace_back(i % m, cnt);
+    }
+    if (tmp > 1) p.emplace_back(tmp % m, 1);
+    deque<pair<int, int>> q { { 0, 1 % m } };
+    vector<vector<int>> f(p.size(), vector<int>(m, 1e9));
+    vector<vector<bool>> vis(p.size(), vector<bool>(m));
+    f[0][1 % m] = 0;
+    while (q.size()) {
+        auto [i, j] = q.front();
+        q.pop_front();
+        if (vis[i][j]) continue;
+        vis[i][j] = 1;
+        int ni = (i + 1) % p.size(), nd = f[i][j] + (!i);
+        auto [x, a] = p[i];
+        for (int e = 0, nj = j; e <= a; ++e, nj = (ll)nj * x % m) {
+            if (nd < f[ni][nj]) {
+                f[ni][nj] = nd;
+                i ? q.emplace_front(ni, nj) : q.emplace_back(ni, nj);
+            }
+        }
+    }
+    vector<int> ans(m, 1e9);
+    for (int i = 0; i < p.size(); ++i)
+        for (int j = 0; j < m; ++j) ans[j] = min(ans[j], max(1, f[i][j]));
+    for (int x : ans) fwn(x >= 1e9 ? -1 : x);
 }
 ```

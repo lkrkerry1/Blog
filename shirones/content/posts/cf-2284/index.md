@@ -1,6 +1,7 @@
 ---
 title: "CF2284 (Div. 2) 做题记录"
 published: 2026-11-07
+updated: 2026-11-17
 description: 数学、数论、构造、Ad-hoc
 tags: [Codeforces, 模拟赛, "Div. 2"]
 category: 题解
@@ -134,6 +135,65 @@ void solve() {
         }
         for (int p = b - a; p; p = pre[p]) ans.emplace_back(p - pre[p]);
         ranges::reverse(ans), fwn(ans.size()), fwn(ans);
+    }
+}
+```
+
+## [D. The Theorem of Two Cans](https://codeforces.com/contest/2284/problem/D)
+
+**题意：** 通信题。第一次运行给一个长度为 $n-1$ 的 0/1 串，构造一个点数为 $n$ 的连通图（不包含重边、自环）输出。输出后可以进行任意次操作，每次操作选择一个长度为奇数的简单路径，将路径中的任意一条边切断，随后如果路径首尾没有连边就连一条边。第二次运行输入操作后的图，要求还原出原字符串。
+
+第一次做通信题，读题都读半天。
+
+注意到这个操作使路径奇偶不变，我们想到二分图的左右点集路径长度永远为奇数，于是将这些点根据字符串分类，钦定 $n$ 点为 $0$ 就可以建立二分图。如果全部都是 $0$ 就输出一个不是二分图的图就行。
+
+第二次运行时只需要进行二分图染色即可。
+
+```cpp
+void solve(string s) {
+    if (s == "first") {
+        int n;
+        fr(n);
+        string s;
+        fr(s), s = ' ' + s + '0';
+        int c0 = 0, c1 = 0;
+        for (int i = 1; i <= n; ++i) {
+            if (s[i] == '0') c0 = i;
+            else c1 = i;
+        }
+        if (!c1) {
+            fwn(n), fwn(1, 3);
+            for (int i = 1; i < n; ++i) fwn(i, i + 1);
+            return;
+        }
+        fwn(n - 1), fwn(c0, c1);
+        for (int i = 1; i <= n; ++i) {
+            if (s[i] == '0' && i != c0) fwn(i, c1);
+            else if (s[i] == '1' && i != c1) fwn(i, c0);
+        }
+    } else {
+        int n, m;
+        fr(n, m);
+        vector<vector<int>> gr(n + 1);
+        vector<int> c(n + 1, -1);
+        for (int u, v; m--;)
+            fr(u, v), gr[u].emplace_back(v), gr[v].emplace_back(u);
+        bool f = 0;
+        auto dfs = [&](this auto&& self, int u) -> void {
+            for (int v : gr[u]) {
+                if (c[v] == c[u]) f = 1;
+                else if (c[v] != -1) continue;
+                else c[v] = c[u] ^ 1, self(v);
+            }
+        };
+        c[n] = 0, dfs(n);
+        if (f) {
+            for (int i = 1; i < n; ++i) fw(0);
+            fw('\n');
+        } else {
+            for (int i = 1; i < n; ++i) fw(c[i]);
+            fw('\n');
+        }
     }
 }
 ```

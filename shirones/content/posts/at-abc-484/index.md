@@ -1,6 +1,7 @@
 ---
 title: "ABC 484 做题记录"
 published: 2026-11-14
+updated: 2026-11-22
 description: "贪心+模拟判别一次移动能否还原、计数去重、离散化+树状数组统计区间和在 [l,r] 内的子段数、线段树合并维护区间是否全同（-1 通配）"
 tags: [AtCoder, 模拟赛, ABC]
 category: 题解
@@ -68,7 +69,7 @@ void solve() {
 
 离散化+树状数组。比较经典的东西。先前缀和，然后移项得到 $s_j-r\le s_i\le s_j-l$，于是只需将前缀和离散化然后插进树状数组，每次查询时查找对应范围就行。
 
-记住离散化的端点结论：当离散化使用 `lower_bound+1` 时，闭区间左端点为 `lower_bound`，右端点为 `upper_bound+1`。
+记住离散化的端点结论：当离散化使用 `lower_bound+1` 时，闭区间左端点为 `lower_bound`，右端点为 `upper_bound`。
 
 ```cpp
 void solve() {

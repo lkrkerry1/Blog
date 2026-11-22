@@ -1,8 +1,8 @@
 ---
 title: "CF2277 (Div. 2) 做题记录"
 published: 2026-10-25
-updated: 2026-11-01
-description: 树上贪心重连 + LCA 求最远距离；二进制拆位推最少操作次数的递推，枚举求和 + 分三段前缀和；交互题按子树大小排序反推父节点
+updated: 2026-11-22
+description: "树上贪心重连 + LCA 求最远距离；二进制拆位推最少操作次数的递推，枚举求和 + 分三段前缀和；交互题按子树大小排序反推父节点"
 tags: [模拟赛, Codeforces, "Div. 2"]
 category: 题解
 lang: zh_CN
@@ -109,7 +109,10 @@ $$
 
 考虑中间那段，带入 $f(n)=f(n-2^k+2)+k+1$。
 $$
-\sum_{i=2^k}^wf(i)=\sum_{i=2^k}^wf(i-2^k+2)+(k+1)(w-2^k+1)=g(w-2^k+2)-g(1)+(k+1)(w-2^k+1)
+\begin{aligned}
+\sum_{i=2^k}^wf(i)&=\sum_{i=2^k}^wf(i-2^k+2)+(k+1)(w-2^k+1) \\
+&=g(w-2^k+2)-g(1)+(k+1)(w-2^k+1)
+\end{aligned}
 $$
 然后考虑第三段，$f(i)=k+2^{k+1}-i$ 是个等差数列，
 $$

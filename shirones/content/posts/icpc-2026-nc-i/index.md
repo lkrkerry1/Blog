@@ -97,9 +97,11 @@ void solve() {
 
 再考虑换根，不妨设 $g(u,k)$ 为以 $u$ 为根时的简单叶子路径或和为 $k$ 的个数，于是 $g(1)=f(1)$。转移时用 $u$ 为根的结果，先减去 $v$ 子树的贡献（此处实际上多或了个 $w_u$ 所以不能合并，只能先减去再加回来），再算 $v$ 子树外的贡献，最后再把 $v$ 子树的贡献重新加回来。
 $$
+\begin{gathered}
 g(v,w_u|k)\leftarrow g(u,w_u|k)-f(v,k) \\
 g(v,k|w_v)\leftarrow \sum g(u,k) \\
 g(v,k)\leftarrow g(v,k)+f(v,k)
+\end{gathered}
 $$
 然后就行了。答案就是叶子数减去可以保留的最大叶子数，即 $\max[k=k|w_u|val]g(u,k)$，其中 $val$ 代表不是叶子的或和（这一部分必然出现在路径的或和中）。
 
